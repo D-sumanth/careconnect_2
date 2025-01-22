@@ -5,7 +5,9 @@ const pool = require("../config/database");
 // Get counts
 router.get("/counts", async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT in_house, new_admissions FROM counts WHERE id = 1");
+    const [rows] = await pool.query(
+      "SELECT in_house, new_admissions FROM counts ORDER BY id DESC LIMIT 1"
+    );
     res.json(rows[0]);
   } catch (error) {
     console.error("Error fetching counts:", error);
@@ -18,7 +20,7 @@ router.post("/update-counts", async (req, res) => {
   try {
     const { inHouse, newAdmissions } = req.body;
     await pool.query(
-      "UPDATE counts SET in_house = ?, new_admissions = ? WHERE id = 1",
+      "INSERT INTO counts (in_house, new_admissions) VALUES (?, ?)",
       [inHouse, newAdmissions]
     );
     res.json({ success: true });
@@ -29,7 +31,6 @@ router.post("/update-counts", async (req, res) => {
 });
 
 module.exports = router;
-
 
 router.post("/save-info", async (req, res) => {
   try {

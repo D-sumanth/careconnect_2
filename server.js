@@ -15,8 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, "public")));
 
 // Test database connection route
 app.get("/api/test", async (req, res) => {
@@ -163,6 +162,37 @@ app.post("/api/acknowledge", async (req, res) => {
   } catch (error) {
     console.error("Error saving acknowledgment:", error);
     res.status(500).json({ error: "Failed to save acknowledgment" });
+  }
+});
+
+app.get("/api/counts", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT in_house, new_admissions FROM counts ORDER BY id DESC LIMIT 1"
+    );
+    if (rows.length > 0) {
+      res.json(rows[0]);
+    } else {
+      res.json({ in_house: 0, new_admissions: 0 });
+    }
+  } catch (error) {
+    console.error("Error fetching counts:", error);
+    res.status(500).json({ error: "Failed to fetch counts" });
+  }
+});
+
+// Endpoint to update counts
+app.post("/api/update-counts", async (req, res) => {
+  try {
+    const { inHouse, newAdmissions } = req.body;
+    await db.query(
+      "INSERT INTO counts (in_house, new_admissions) VALUES (?, ?)",
+      [inHouse, newAdmissions]
+    );
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error updating counts:", error);
+    res.status(500).json({ error: "Failed to update counts" });
   }
 });
 

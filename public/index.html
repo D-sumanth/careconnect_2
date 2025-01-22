@@ -12,8 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/styles.css">
-
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
     <div class="top-container">
@@ -94,48 +93,77 @@
         });
       });
     </script>
-    <script src="/js/shared.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Initialize the info manager
-        InfoManager.init();
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the elements
         const updateButton = document.getElementById("update-info");
         const popup = document.getElementById("update-popup");
-        const closePopup = document.querySelector(".close-popup");
+        const closeButton = document.querySelector(".close-popup");
         const updateForm = document.getElementById("update-form");
 
-        // Show popup with current values
-        updateButton.addEventListener("click", () => {
-          const counts = InfoManager.getCounts();
-          document.getElementById("in-house").value = counts.inHouse;
-          document.getElementById("new-admissions").value =
-            counts.newAdmissions;
+        // Open popup when update button is clicked
+        updateButton.addEventListener("click", function () {
           popup.style.display = "block";
         });
 
-        // Close popup
-        closePopup.addEventListener("click", () => {
+        // Close popup when X button is clicked
+        closeButton.addEventListener("click", function () {
           popup.style.display = "none";
         });
 
-        // Close on outside click
-        window.addEventListener("click", (e) => {
-          if (e.target === popup) {
+        // Close popup when clicking outside
+        window.addEventListener("click", function (event) {
+          if (event.target === popup) {
             popup.style.display = "none";
           }
         });
 
         // Handle form submission
-        updateForm.addEventListener("submit", (e) => {
+        updateForm.addEventListener("submit", async function (e) {
           e.preventDefault();
-          const inHouse = document.getElementById("in-house").value;
-          const newAdmissions = document.getElementById("new-admissions").value;
 
-          InfoManager.updateCounts(inHouse, newAdmissions);
-          popup.style.display = "none";
+          const inHouseInput = document.getElementById("in-house");
+          const newAdmissionsInput = document.getElementById("new-admissions");
+
+          try {
+            const response = await fetch("/api/update-counts", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                inHouse: parseInt(inHouseInput.value),
+                newAdmissions: parseInt(newAdmissionsInput.value),
+              }),
+            });
+
+            if (!response.ok) throw new Error("Failed to update counts");
+
+            // Close the popup after successful update
+            popup.style.display = "none";
+
+            // Clear the form
+            updateForm.reset();
+
+            // Update the displayed counts in the info-box
+            document.getElementById("in-house-display").textContent =
+              inHouseInput.value;
+            document.getElementById("new-admissions-display").textContent =
+              newAdmissionsInput.value;
+
+            // Refresh the displayed counts
+            await InfoManager.fetchAndDisplayCounts();
+          } catch (error) {
+            console.error("Error updating information:", error);
+            alert("Failed to update information. Please try again.");
+          }
         });
+
+        // Initialize the counts when the page loads
+        InfoManager.init();
       });
     </script>
+    <script src="/js/shared.js"></script>
   </body>
 </html>
