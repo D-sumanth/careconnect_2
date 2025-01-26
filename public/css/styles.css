@@ -193,6 +193,36 @@
         font-size: 1rem;
       }
 
+      .add-staff-button {
+        width: 100%;
+        margin-top: 15px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .add-staff-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+      }
+
+      .add-staff-button i {
+        font-size: 1rem;
+      }
+
       /* Update popup styles to match the theme */
       .popup-content {
         position: absolute;
