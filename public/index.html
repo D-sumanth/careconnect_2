@@ -64,8 +64,16 @@
           </div>
           <div class="form-group">
             <label for="staff-department">Department:</label>
-            <input type="text" id="staff-department" required />
+            <select id="staff-department" name="staff-department" required>
+              <option value="" disabled selected>Select Department</option>
+              <option value="Medical">Medical</option>
+              <option value="Kitchen">Kitchen</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Admin">Admin</option>
+              <option value="Reception">Reception</option>
+            </select>
           </div>
+          
           <button type="submit" class="submit-button">Add</button>
         </form>
       </div>
