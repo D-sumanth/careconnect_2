@@ -187,7 +187,7 @@ async function loadAcknowledgments(infoId, container) {
 
     if (XXXXXXXXXXXXXXX.length === 0) {
       container.innerHTML =
-        '<p class="no-acknowledgments">No XXXXXXXXXXXXXXX yet</p>';
+        '<p class="no-acknowledgments">No Staff Acknowledgments yet</p>';
       return;
     }
 
