@@ -27,36 +27,53 @@
     <!-- Replace only the form-container div in the form.html with this code -->
     <div class="form-container">
       <form id="infoForm" onsubmit="submitForm(event)">
+        <!-- Home Selection -->
         <div class="form-group">
-          <label for="home">Home</label>
-          <input
-            type="text"
-            id="home"
-            placeholder="Enter home details"
-            required
-          />
+          <label for="home">Home:</label>
+          <select id="home" name="home" required>
+            <option value="" disabled selected>Select Home</option>
+            <option value="Headingley">Headingley</option>
+            <option value="Pennington">Pennington</option>
+            <option value="Southlands">Southlands</option>
+            <option value="Cedars">Cedars</option>
+          </select>
         </div>
-
+        <!-- Department Selection -->
         <div class="form-group">
-          <label for="department">Department</label>
-          <input
-            type="text"
-            id="department"
-            placeholder="Enter department"
-            required
-          />
+          <label for="department">Department:</label>
+          <select id="department" name="department" required>
+            <option value="" disabled selected>Select Department</option>
+            <option value="Medical">Medical</option>
+            <option value="Kitchen">Kitchen</option>
+            <option value="Housekeeping">Housekeeping</option>
+            <option value="Admin">Admin</option>
+            <option value="Reception">Reception</option>
+          </select>
         </div>
-
-        <div class="form-group">
-          <label for="nameDesignation">Name-Designation</label>
-          <input
-            type="text"
-            id="nameDesignation"
-            placeholder="Enter name and designation"
-            required
-          />
+        <!-- Name and Designation -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="designation">Designation</label>
+            <input
+              type="text"
+              id="designation"
+              name="designation"
+              placeholder="Enter designation"
+              required
+            />
+          </div>
         </div>
-
+        <!-- Information -->
         <div class="form-group">
           <label for="information">Information</label>
           <textarea
@@ -65,17 +82,15 @@
             required
           ></textarea>
         </div>
-
+        <!-- Authorized By -->
         <div class="form-group">
-          <label for="authorizedBy">Authorized By</label>
-          <input
-            type="text"
-            id="authorizedBy"
-            placeholder="Enter authorizing person's name"
-            required
-          />
+          <label for="authorizedBy">Authorized By:</label>
+          <select id="authorizedBy" name="authorizedBy" required>
+            <option value="" disabled selected>Select Authorized Person</option>
+            <!-- Options will be populated dynamically based on Department -->
+          </select>
         </div>
-
+        <!-- State of Information -->
         <div class="form-group">
           <label for="state">State of Information</label>
           <select id="state" required>
@@ -85,7 +100,7 @@
             <option value="Event-Based">Event-Based</option>
           </select>
         </div>
-
+        <!-- Send To Options -->
         <div class="send-to-box">
           <label>Send To</label>
           <div class="send-to-options">
@@ -98,7 +113,7 @@
             <div class="option-chip">Admin Office</div>
           </div>
         </div>
-
+        <!-- Buttons -->
         <div class="button-group">
           <button
             type="button"
@@ -125,26 +140,37 @@
       // Set the correct state in the dropdown
       document.getElementById("state").value =
         type.charAt(0).toUpperCase() + type.slice(1);
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const departmentDropdown = document.getElementById("department");
+        const authorizedByDropdown = document.getElementById("authorizedBy");
 
-      // Form submission handler
-      document
-        .getElementById("infoForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-          // Add form submission logic here
-          alert("Form submitted successfully!");
-        });
+        // Department to Authorized By Mapping
+        const authorizedByOptions = {
+          Medical: ["Medic 1", "Medic 2"],
+          Kitchen: ["Chef 1", "Chef 2"],
+          Housekeeping: ["HK 1", "HK 2"],
+          Admin: ["Admin 1", "Admin 2"],
+          Reception: ["Receptionist 1", "Receptionist 2"],
+        };
 
-      // Make chips selectable
-      document.querySelectorAll(".option-chip").forEach((chip) => {
-        chip.addEventListener("click", function () {
-          this.classList.toggle("selected");
-          if (this.classList.contains("selected")) {
-            this.style.background = getComputedStyle(document.body).background;
-            this.style.color = "white";
-          } else {
-            this.style.background = "white";
-            this.style.color = "";
+        // Populate Authorized By Dropdown Based on Selected Department
+        departmentDropdown.addEventListener("change", function () {
+          const selectedDepartment = departmentDropdown.value;
+
+          // Clear previous options
+          authorizedByDropdown.innerHTML =
+            '<option value="" disabled selected>Select Authorized Person</option>';
+
+          // Add new options
+          if (authorizedByOptions[selectedDepartment]) {
+            authorizedByOptions[selectedDepartment].forEach((person) => {
+              const option = document.createElement("option");
+              option.value = person;
+              option.textContent = person;
+              authorizedByDropdown.appendChild(option);
+            });
           }
         });
       });

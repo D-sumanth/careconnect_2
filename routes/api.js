@@ -26,7 +26,8 @@ router.post("/forms", async (req, res) => {
     const {
       home,
       department,
-      nameDesignation,
+      name,
+      designation,
       information,
       authorizedBy,
       state,
@@ -35,12 +36,13 @@ router.post("/forms", async (req, res) => {
 
     const [result] = await db.query(
       `INSERT INTO information 
-      (home, department, name_designation, information, authorized_by, state_type, send_to) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      (home, department, name, designation, information, authorized_by, state_type, send_to) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         home,
         department,
-        nameDesignation,
+        name,
+        designation,
         information,
         authorizedBy,
         state,
@@ -160,12 +162,14 @@ router.post("/add-staff", async (req, res) => {
   try {
     const { name, department } = req.body;
     if (!name || !department) {
-      return res.status(400).json({ error: "Name and department are required" });
+      return res
+        .status(400)
+        .json({ error: "Name and department are required" });
     }
-    await db.query(
-      "INSERT INTO staff (name, department) VALUES (?, ?)",
-      [name, department]
-    );
+    await db.query("INSERT INTO staff (name, department) VALUES (?, ?)", [
+      name,
+      department,
+    ]);
     res.json({ success: true, message: "Staff member added successfully" });
   } catch (error) {
     console.error("Error adding staff:", error);

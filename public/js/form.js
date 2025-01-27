@@ -9,7 +9,8 @@ async function submitForm(event) {
   const formData = {
     home: document.getElementById("home").value,
     department: document.getElementById("department").value,
-    nameDesignation: document.getElementById("nameDesignation").value,
+    name: document.getElementById("name").value,
+    designation: document.getElementById("designation").value,
     information: document.getElementById("information").value,
     authorizedBy: document.getElementById("authorizedBy").value,
     state: document.getElementById("state").value,
