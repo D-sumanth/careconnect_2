@@ -1,0 +1,19 @@
+.top-container, .cards-container {
+    margin-left: 200px; /* Same as nav width */
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: block;
+    width: 100%;
+}
+
+.main-nav a:hover {
+    background-color: #34495e;
+}
+
+.main-nav a.active {
+    background-color: #34495e;
+}
