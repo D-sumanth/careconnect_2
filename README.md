@@ -6,17 +6,31 @@ CareConnect is a **centralized digital communication system** designed for care 
 
 ## Features
 
--   **Real-Time Updates**: Displays the current date and time, refreshing every second.
--   **Manage Admissions**: Update and track "In House" and "New Admissions" counts.
--   **Staff Management**: Add new staff members via a user-friendly form.
--   **Categorized Information**: Supports **Critical, Routine, and Event-Based** information cards.
--   **Submit Information Forms**: Staff can submit updates with structured form fields.
--   **Dashboards**: Interactive dashboards for staff and management with real-time updates.
--   **Acknowledgment Tracking**: Staff can acknowledge information, and the system logs it.
--   **Information Details**: View additional details on submitted updates via a modal popup.
--   **Database Integration**: Fetches and updates counts dynamically from MySQL.
--   **Responsive Design**: Ensures compatibility across desktop, tablet, and mobile devices.
-
+1. **Display Current Date and Time**:
+    - The platform displays the current date and time on the main page and updates it every second.
+2. **Update In-House and New Admissions Counts**:
+    - Users can update the "In House" and "New Admissions" counts through a popup form. The updated counts are saved to the database and displayed on the main page.
+3. **Add New Staff Members**:
+    - Users can add new staff members by filling out a form in a popup. The new staff member's information is saved to the database.
+4. **Categorized Information Cards**:
+    - The main page displays three categories of information cards: Critical, Routine, and Event-Based. Clicking on a card redirects the user to a form page to submit new information for that category.
+5. **Submit Information Forms**:
+    - Users can submit information forms for different categories (Critical, Routine, Event-Based). The form includes fields for home, department, name, designation, information details, authorized by, state, and send to options. The submitted information is saved to the database.
+6. **View Dashboard**:
+    - Users can navigate to a dashboard page that displays categorized information (Critical, Routine, Event-Based) dynamically loaded from the database. The dashboard also shows the current date, time, in-house count, and new admissions count.
+7. **Staff Dashboard**:
+    - Users can navigate to a staff dashboard page that displays categorized information (Critical, Routine, Event-Based) dynamically loaded from the database. The staff dashboard also shows the current date, time, in-house count, and new admissions count.
+8. **Acknowledge Information**:
+    - Staff members can acknowledge information by selecting their name from a dropdown and clicking the acknowledge button. The acknowledgment is saved to the database, and the acknowledgment status is updated.
+9. **View More Information**:
+    - Users can view more details about a piece of information by clicking the "View More" button on the information card. This opens a modal with detailed information and acknowledgment status.
+10. **Fetch and Display Counts**:
+    - The platform fetches and displays the latest in-house and new admissions counts from the database when the page loads.
+11. **Shared JavaScript Functions**:
+    - The platform includes shared JavaScript functions for fetching and displaying counts, initializing the page, and handling form submissions.
+12. **Responsive Design**:
+    - The platform's design is responsive, ensuring proper rendering and usability on different devices and screen sizes.
+*Note: More features and updates will be added as development progresses.*
 ## Tech Stack
 
 ### Frontend
