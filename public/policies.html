@@ -1,36 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Policies Management - CareConnect</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/css/header-controls.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/vertical-nav.css" />
+    <link rel="stylesheet" href="/css/policies.css" />
   </head>
   <body>
-    <div class="top-container">
+    <div class="sidebar">
       <header>
         <h1 class="logo">
           <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
         </h1>
       </header>
+
+      <nav class="vertical-nav">
+        <ul>
+          <li>
+            <a href="index.html">
+              <i class="fas fa-home"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="policies.html" class="active">
+              <i class="fas fa-book"></i>
+              <span>Policies</span>
+            </a>
+          </li>
+          <li>
+            <a href="dashboard.html">
+              <i class="fas fa-chart-line"></i>
+              <span>Admin Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="staff-dashboard.html">
+              <i class="fas fa-users"></i>
+              <span>Staff Dashboard</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
 
     <div class="main-content">
-      <h2>Policies Management</h2>
       <div class="policies-container">
-        <!-- Content for policies management will be added here -->
-        <p>Policy management features coming soon...</p>
+        <div class="policy-section">
+          <h2>Policies Management</h2>
+          <div class="policy-cards">
+            <div class="policy-card">
+              <div class="policy-header">
+                <i class="fas fa-file-alt"></i>
+                <h3>General Policies</h3>
+              </div>
+              <div class="policy-content">
+                <ul>
+                  <li>Code of Conduct</li>
+                  <li>Employee Handbook</li>
+                  <li>Privacy Policy</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="policy-card">
+              <div class="policy-header">
+                <i class="fas fa-procedures"></i>
+                <h3>Care Policies</h3>
+              </div>
+              <div class="policy-content">
+                <ul>
+                  <li>Patient Care Standards</li>
+                  <li>Emergency Procedures</li>
+                  <li>Medication Management</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="policy-card">
+              <div class="policy-header">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Safety Policies</h3>
+              </div>
+              <div class="policy-content">
+                <ul>
+                  <li>Workplace Safety</li>
+                  <li>Infection Control</li>
+                  <li>Emergency Response</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <a href="dashboard.html" class="back-button">
-      <i class="fas fa-arrow-left"></i>
-      Back to Dashboard
-    </a>
 
     <script src="/js/shared.js"></script>
   </body>
