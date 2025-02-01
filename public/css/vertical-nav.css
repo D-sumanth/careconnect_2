@@ -1,49 +1,56 @@
+/* Add this to your styles.css */
+
+/* Vertical Navigation Styles */
 .vertical-nav {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem;
-    position: fixed;
-    left: 20px;
-    top: 120px;
-    width: 220px;
-    z-index: 1000;
-}
-
-.vertical-nav ul {
+    width: 100%;
+    padding: 20px 0;
+  }
+  
+  .vertical-nav ul {
     list-style: none;
-    margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.vertical-nav a {
+    margin: 0;
+  }
+  
+  .vertical-nav li {
+    margin-bottom: 10px;
+  }
+  
+  .vertical-nav a {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    padding: 12px 25px;
     color: #2c3e50;
     text-decoration: none;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
     transition: all 0.3s ease;
-}
-
-.vertical-nav a:hover {
-    background-color: #2196f3;
+    font-size: 0.95rem;
+    position: relative;
+    gap: 12px;
+  }
+  
+  .vertical-nav a:hover {
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+  }
+  
+  .vertical-nav a.active {
+    background: #2196f3;
     color: white;
-    transform: translateX(5px);
-}
-
-.vertical-nav a.active {
-    background-color: #2196f3;
-    color: white;
-}
-
-.vertical-nav i {
-    font-size: 1.1rem;
-    width: 20px;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+  }
+  
+  .vertical-nav a.active:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: #1976d2;
+  }
+  
+  .vertical-nav i {
+    font-size: 1.2rem;
+    width: 24px;
     text-align: center;
-}
+  }
