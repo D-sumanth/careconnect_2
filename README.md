@@ -30,6 +30,7 @@ CareConnect is a **centralized digital communication system** designed for care 
     - The platform includes shared JavaScript functions for fetching and displaying counts, initializing the page, and handling form submissions.
 12. **Responsive Design**:
     - The platform's design is responsive, ensuring proper rendering and usability on different devices and screen sizes.
+
 *Note: More features and updates will be added as development progresses.*
 ## Tech Stack
 
