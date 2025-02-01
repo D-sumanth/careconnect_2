@@ -65,8 +65,16 @@ header {
   animation: fadeIn 0.6s ease;
 }
 
+.form-row {
+  display: flex;
+  gap: 1rem; /* Adds space between the fields */
+}
+
 .form-group {
   margin-bottom: 20px;
+  flex: 1; /* Ensures both fields take equal width */
+  display: flex;
+  flex-direction: column;
 }
 
 label {
@@ -134,9 +142,10 @@ textarea {
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-align: center;
 }
 
-/* Chip styles for different types */
+/* Default unselected styles for chips */
 .critical .option-chip {
   border: 2px solid #ff9800;
   color: #ff9800;
@@ -150,6 +159,25 @@ textarea {
 .event-based .option-chip {
   border: 2px solid #4caf50;
   color: #4caf50;
+}
+
+/* Selected styles for chips */
+.critical .option-chip.selected {
+  background: #ff9800;
+  color: #fff; /* White text when selected */
+  border: 2px solid #ff9800;
+}
+
+.routine .option-chip.selected {
+  background: #2196f3;
+  color: #fff; /* White text when selected */
+  border: 2px solid #2196f3;
+}
+
+.event-based .option-chip.selected {
+  background: #4caf50;
+  color: #fff; /* White text when selected */
+  border: 2px solid #4caf50;
 }
 
 .button-group {

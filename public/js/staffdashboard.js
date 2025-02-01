@@ -76,7 +76,7 @@ function createInfoBox(info) {
             </div>
         </div>
         <div class="info-footer">
-            <span class="info-author">By: ${info.name_designation}</span>
+            <span class="info-author">By: ${info.name}</span>
             <div class="button-group">
                 <button class="acknowledge-btn" onclick="showModal('${encodeURIComponent(
                   JSON.stringify(info)
@@ -125,7 +125,7 @@ function showModal(infoString, isAcknowledge) {
             <div class="modal-info">
                 <p class="full-info">${info.information}</p>
                 <div class="info-details">
-                    <p><strong>Author:</strong> ${info.name_designation}</p>
+                    <p><strong>Author:</strong> ${info.name}</p>
                     <p><strong>Authorized By:</strong> ${info.authorized_by}</p>
                     <p><strong>Date:</strong> ${new Date(
                       info.created_at
@@ -187,7 +187,7 @@ async function loadAcknowledgments(infoId, container) {
 
     if (XXXXXXXXXXXXXXX.length === 0) {
       container.innerHTML =
-        '<p class="no-acknowledgments">No XXXXXXXXXXXXXXX yet</p>';
+        '<p class="no-acknowledgments">No Staff Acknowledgments yet</p>';
       return;
     }
 

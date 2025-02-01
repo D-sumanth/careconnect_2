@@ -193,6 +193,36 @@
         font-size: 1rem;
       }
 
+      .add-staff-button {
+        width: 100%;
+        margin-top: 15px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .add-staff-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+      }
+
+      .add-staff-button i {
+        font-size: 1rem;
+      }
+
       /* Update popup styles to match the theme */
       .popup-content {
         position: absolute;
@@ -225,22 +255,38 @@
         font-weight: 500;
       }
 
-      .form-group input {
+      .form-group input,
+      .form-group select {
         width: 100%;
         padding: 12px;
         border: 1px solid rgba(33, 150, 243, 0.2);
         border-radius: 10px;
         background: rgba(255, 255, 255, 0.9);
         font-family: "Poppins", sans-serif;
+        font-size: 1rem;
         transition: all 0.3s ease;
       }
 
-      .form-group input:focus {
+      .form-group input:focus,
+      .form-group select:focus {
         outline: none;
         border-color: #2196f3;
         box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
       }
+      .form-group select {
+        -webkit-appearance: none; /* Hides default dropdown arrow in some browsers */
+        -moz-appearance: none;
+        appearance: none;
+        background: rgba(255, 255, 255, 0.9) url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iIzIxOTZmMyIgdmlld0JveD0iMCAwIDE2IDE2Ij4gPHBhdGggZD0iTTggMTNsLTYuNjI2LTYuNjI2IDEuMjgyLTEuMjgyTDggMTAuNzM2bDUuNjk0LTUuNjk0IDEuMjgyIDEuMjgyTCA4IDEzeiIvPjwvc3ZnPg==')
+          no-repeat right 12px center;
+        background-size: 12px 12px; /* Adjust arrow size */
+      }
 
+      .form-group select:disabled {
+        color: #999;
+        cursor: not-allowed;
+      }
+      
       .submit-button {
         width: 100%;
         padding: 12px;

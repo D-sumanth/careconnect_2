@@ -30,6 +30,9 @@
         <button id="update-info" class="update-button">
           <i class="fas fa-edit"></i> Update Information
         </button>
+        <button id="add-staff" class="add-staff-button">
+          <i class="fas fa-user-plus"></i> Add Staff
+        </button>
       </div>
     </div>
     <div id="update-popup" class="popup">
@@ -46,6 +49,32 @@
             <input type="number" id="new-admissions" min="0" required />
           </div>
           <button type="submit" class="submit-button">Update</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="add-staff-popup" class="popup">
+      <div class="popup-content">
+        <span class="close-popup">&times;</span>
+        <h2>Add Staff</h2>
+        <form id="add-staff-form">
+          <div class="form-group">
+            <label for="staff-name">Name:</label>
+            <input type="text" id="staff-name" required />
+          </div>
+          <div class="form-group">
+            <label for="staff-department">Department:</label>
+            <select id="staff-department" name="staff-department" required>
+              <option value="" disabled selected>Select Department</option>
+              <option value="Medical">Medical</option>
+              <option value="Kitchen">Kitchen</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Admin">Admin</option>
+              <option value="Reception">Reception</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="submit-button">Add</button>
         </form>
       </div>
     </div>
@@ -119,7 +148,7 @@
           }
         });
 
-        // Handle form submission
+        // Handle form submission for updating information
         updateForm.addEventListener("submit", async function (e) {
           e.preventDefault();
 
@@ -146,12 +175,6 @@
             // Clear the form
             updateForm.reset();
 
-            // Update the displayed counts in the info-box
-            document.getElementById("in-house-display").textContent =
-              inHouseInput.value;
-            document.getElementById("new-admissions-display").textContent =
-              newAdmissionsInput.value;
-
             // Refresh the displayed counts
             await InfoManager.fetchAndDisplayCounts();
           } catch (error) {
@@ -160,10 +183,72 @@
           }
         });
 
+        // Handle form submission for adding staff
+        const addStaffButton = document.getElementById("add-staff");
+        const addStaffPopup = document.getElementById("add-staff-popup");
+        const addStaffForm = document.getElementById("add-staff-form");
+        const addStaffCloseButton = addStaffPopup.querySelector(".close-popup");
+
+        // Open Add Staff popup
+        addStaffButton.addEventListener("click", function () {
+          addStaffPopup.style.display = "block";
+        });
+
+        // Close Add Staff popup when the close button is clicked
+        addStaffCloseButton.addEventListener("click", function () {
+          addStaffPopup.style.display = "none";
+        });
+
+        // Close Add Staff popup when clicking outside
+        window.addEventListener("click", function (event) {
+          if (event.target === addStaffPopup) {
+            addStaffPopup.style.display = "none";
+          }
+        });
+
+        // Handle form submission for adding staff
+        addStaffForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const staffNameInput = document
+            .getElementById("staff-name")
+            .value.trim();
+          const staffDepartmentInput = document
+            .getElementById("staff-department")
+            .value.trim();
+
+          try {
+            const response = await fetch("/api/add-staff", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: staffNameInput,
+                department: staffDepartmentInput,
+              }),
+            });
+
+            if (!response.ok) throw new Error("Failed to add staff");
+
+            // Close the popup after successful addition
+            addStaffPopup.style.display = "none";
+
+            // Clear the form
+            addStaffForm.reset();
+
+            alert("Staff member added successfully!");
+          } catch (error) {
+            console.error("Error adding staff:", error);
+            alert("Failed to add staff. Please try again.");
+          }
+        });
+
         // Initialize the counts when the page loads
         InfoManager.init();
       });
     </script>
+
     <script src="/js/shared.js"></script>
   </body>
 </html>
