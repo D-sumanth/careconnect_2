@@ -1,72 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Information Dashboard - CareConnect</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/css/vertical-nav.css" />
   </head>
   <body>
-    <div class="top-container">
+    <div class="sidebar">
       <header>
         <h1 class="logo">
           <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
         </h1>
       </header>
-
-      <div class="info-box">
-        <p>Date: <span id="current-date"></span></p>
-        <p>Time: <span id="current-time"></span></p>
-        <p>In House: <span id="in-house-display">0</span></p>
-        <p>New Admissions: <span id="new-admissions-display">0</span></p>
-        <!-- <p>Discharges: <span>1</span></p>
-            <p>New Admissions: <span>1</span></p> -->
-      </div>
+      
+      <nav class="vertical-nav">
+        <ul>
+          <li><a href="index.html">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </a></li>
+          <li><a href="dashboard.html" class="active">
+            <i class="fas fa-chart-line"></i>
+            <span>Admin Dashboard</span>
+          </a></li>
+          <li><a href="staff-dashboard.html">
+            <i class="fas fa-users"></i>
+            <span>Staff Dashboard</span>
+          </a></li>
+          <li><a href="policies.html">
+            <i class="fas fa-book"></i>
+            <span>Policies</span>
+          </a></li>
+        </ul>
+      </nav>
     </div>
-
+  
     <div class="main-content">
-      <div class="info-block critical">
-        <div class="block-header">
-          <i class="fas fa-exclamation-circle"></i>
-          Critical Information
+      <div class="info-blocks">
+        <div class="info-block critical">
+          <div class="block-header">
+            <i class="fas fa-exclamation-circle"></i>
+            Critical Information
+          </div>
+          <div class="block-content" id="criticalContent">
+            <!-- Critical information will be dynamically loaded here -->
+          </div>
         </div>
-        <div class="block-content" id="criticalContent">
-          <!-- Critical information will be dynamically loaded here -->
+  
+        <div class="info-block routine">
+          <div class="block-header">
+            <i class="fas fa-clipboard-list"></i>
+            Routine Information
+          </div>
+          <div class="block-content" id="routineContent">
+            <!-- Routine information will be dynamically loaded here -->
+          </div>
         </div>
-      </div>
-
-      <div class="info-block routine">
-        <div class="block-header">
-          <i class="fas fa-clipboard-list"></i>
-          Routine Information
-        </div>
-        <div class="block-content" id="routineContent">
-          <!-- Routine information will be dynamically loaded here -->
-        </div>
-      </div>
-
-      <div class="info-block event-based">
-        <div class="block-header">
-          <i class="fas fa-calendar-alt"></i>
-          Event Based Information
-        </div>
-        <div class="block-content" id="eventContent">
-          <!-- Event based information will be dynamically loaded here -->
+  
+        <div class="info-block event-based">
+          <div class="block-header">
+            <i class="fas fa-calendar-alt"></i>
+            Event Based Information
+          </div>
+          <div class="block-content" id="eventContent">
+            <!-- Event based information will be dynamically loaded here -->
+          </div>
         </div>
       </div>
     </div>
-
-    <a href="index.html" class="back-button">
-      <i class="fas fa-arrow-left"></i>
-      Back to Home
-    </a>
-    <a href="staff-dashboard.html" class="staff-button">
-      <i class="fas fa-user"></i>
-      Staff Dashboard
-    </a>
 
     <script>
       // Keep your existing date/time update function
@@ -85,6 +97,29 @@
 
       updateDateTime();
       setInterval(updateDateTime, 1000);
+    </script>
+    <script>
+      // shared.js
+      document.addEventListener("DOMContentLoaded", function () {
+        // Create and add menu toggle button for mobile
+        const menuToggle = document.createElement("button");
+        menuToggle.className = "menu-toggle";
+        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        document.body.appendChild(menuToggle);
+
+        const sidebar = document.querySelector(".sidebar");
+
+        menuToggle.addEventListener("click", function () {
+          sidebar.classList.toggle("active");
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener("click", function (e) {
+          if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+            sidebar.classList.remove("active");
+          }
+        });
+      });
     </script>
     <script src="js/dashboard.js"></script>
     <script src="/js/shared.js"></script>

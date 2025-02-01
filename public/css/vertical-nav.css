@@ -1,7 +1,39 @@
-/* Add this to your styles.css */
-
-/* Vertical Navigation Styles */
-.vertical-nav {
+/* vertical-nav.css */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+  }
+  
+  .sidebar header {
+    padding: 25px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    letter-spacing: -1px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .logo .blue-c {
+    color: #2196f3;
+    text-shadow: 2px 2px 4px rgba(33, 150, 243, 0.2);
+  }
+  
+  .vertical-nav {
     width: 100%;
     padding: 20px 0;
   }
@@ -14,6 +46,9 @@
   
   .vertical-nav li {
     margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.3s ease forwards;
   }
   
   .vertical-nav a {
@@ -39,18 +74,54 @@
     box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
   }
   
-  .vertical-nav a.active:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background: #1976d2;
-  }
-  
   .vertical-nav i {
     font-size: 1.2rem;
     width: 24px;
     text-align: center;
   }
+  
+  /* Animation delays for menu items */
+  .vertical-nav li:nth-child(1) { animation-delay: 0.1s; }
+  .vertical-nav li:nth-child(2) { animation-delay: 0.2s; }
+  .vertical-nav li:nth-child(3) { animation-delay: 0.3s; }
+  .vertical-nav li:nth-child(4) { animation-delay: 0.4s; }
+  
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+  
+    .sidebar.active {
+      transform: translateX(0);
+    }
+  
+    .menu-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+      background: #2196f3;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .menu-toggle i {
+      font-size: 1.5rem;
+    }
+  }
+  
