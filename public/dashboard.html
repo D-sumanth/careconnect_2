@@ -4,128 +4,200 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Information Dashboard - CareConnect</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/css/common.css" />
     <link rel="stylesheet" href="/css/dashboard.css" />
     <link rel="stylesheet" href="/css/vertical-nav.css" />
+    <!-- Add Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-  <body>
-    <div class="sidebar">
-      <header>
-        <h1 class="logo">
-          <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
-        </h1>
-      </header>
-      
-      <nav class="vertical-nav">
-        <ul>
-          <li><a href="index.html">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-          </a></li>
-          <li><a href="policies.html">
-            <i class="fas fa-book"></i>
-            <span>Policies</span>
-          </a></li>
-          <li><a href="dashboard.html" class="active">
-            <i class="fas fa-chart-line"></i>
-            <span>Admin Dashboard</span>
-          </a></li>
-          <li><a href="staff-dashboard.html">
-            <i class="fas fa-users"></i>
-            <span>Staff Dashboard</span>
-          </a></li>
-          <li><a href="invoices.html">
-            <i class="fas fa-receipt"></i>
-            <span>Invoices</span>
+  <div class="sidebar">
+    <header>
+      <h1 class="logo">
+        <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
+      </h1>
+    </header>
+    
+    <nav class="vertical-nav">
+      <ul>
+        <li><a href="index.html">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
         </a></li>
-        </ul>
-      </nav>
-    </div>
-  
+        <li><a href="policies.html">
+          <i class="fas fa-book"></i>
+          <span>Policies</span>
+        </a></li>
+        <li><a href="dashboard.html" class="active">
+          <i class="fas fa-chart-line"></i>
+          <span>Admin Dashboard</span>
+        </a></li>
+        <li><a href="staff-dashboard.html">
+          <i class="fas fa-users"></i>
+          <span>Staff Dashboard</span>
+        </a></li>
+        <li><a href="invoices.html">
+          <i class="fas fa-receipt"></i>
+          <span>Invoices</span>
+      </a></li>
+      </ul>
+    </nav>
+  </div>
+
     <div class="main-content">
-      <div class="info-blocks">
-        <div class="info-block critical">
-          <div class="block-header">
-            <i class="fas fa-exclamation-circle"></i>
-            Critical Information
+      <!-- Summary Statistics Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-share-alt"></i>
           </div>
-          <div class="block-content" id="criticalContent">
-            <!-- Critical information will be dynamically loaded here -->
-          </div>
-        </div>
-  
-        <div class="info-block routine">
-          <div class="block-header">
-            <i class="fas fa-clipboard-list"></i>
-            Routine Information
-          </div>
-          <div class="block-content" id="routineContent">
-            <!-- Routine information will be dynamically loaded here -->
+          <div class="stat-details">
+            <h3>Total Shared Information</h3>
+            <p class="stat-number" id="totalShared">0</p>
           </div>
         </div>
-  
-        <div class="info-block event-based">
-          <div class="block-header">
-            <i class="fas fa-calendar-alt"></i>
-            Event Based Information
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
           </div>
-          <div class="block-content" id="eventContent">
-            <!-- Event based information will be dynamically loaded here -->
+          <div class="stat-details">
+            <h3>Total Acknowledged</h3>
+            <p class="stat-number" id="totalAcknowledged">0</p>
           </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-details">
+            <h3>Pending Acknowledgments</h3>
+            <p class="stat-number" id="pendingAcknowledgments">0</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-percentage"></i>
+          </div>
+          <div class="stat-details">
+            <h3>Completion Rate</h3>
+            <div class="progress-bar">
+              <div class="progress" id="completionProgress"></div>
+            </div>
+            <p class="stat-number" id="completionRate">0%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Department Breakdown Section -->
+      <div class="dashboard-section">
+        <h2>Department Acknowledgment Status</h2>
+        <div class="chart-container">
+          <canvas id="departmentChart"></canvas>
+        </div>
+        <div class="table-container">
+          <table class="department-table">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Total Notices</th>
+                <th>Acknowledged</th>
+                <th>Pending</th>
+              </tr>
+            </thead>
+            <tbody id="departmentTableBody">
+              <!-- Table rows will be populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Policies Compliance Section -->
+      <div class="dashboard-section">
+        <h2>Policies & Compliance</h2>
+        <div class="policies-grid">
+          <div class="policy-stat-card">
+            <h3>Total Policies</h3>
+            <p class="stat-number" id="totalPolicies">0</p>
+          </div>
+          <div class="policy-stat-card">
+            <h3>Signed Policies</h3>
+            <p class="stat-number" id="signedPolicies">0</p>
+          </div>
+          <div class="policy-stat-card">
+            <h3>Pending Signatures</h3>
+            <p class="stat-number" id="pendingPolicies">0</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="policiesChart"></canvas>
         </div>
       </div>
     </div>
 
+    <script src="/js/shared.js"></script>
     <script>
-      // Keep your existing date/time update function
-      function updateDateTime() {
-        const now = new Date();
-        const dd = String(now.getDate()).padStart(2, "0");
-        const mm = String(now.getMonth() + 1).padStart(2, "0");
-        const yyyy = now.getFullYear();
-        const time = now.toLocaleTimeString();
-
-        document.getElementById(
-          "current-date"
-        ).textContent = `${dd}/${mm}/${yyyy}`;
-        document.getElementById("current-time").textContent = time;
-      }
-
-      updateDateTime();
-      setInterval(updateDateTime, 1000);
-    </script>
-    <script>
-      // shared.js
-      document.addEventListener("DOMContentLoaded", function () {
-        // Create and add menu toggle button for mobile
-        const menuToggle = document.createElement("button");
-        menuToggle.className = "menu-toggle";
-        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-        document.body.appendChild(menuToggle);
-
-        const sidebar = document.querySelector(".sidebar");
-
-        menuToggle.addEventListener("click", function () {
-          sidebar.classList.toggle("active");
-        });
-
-        // Close sidebar when clicking outside
-        document.addEventListener("click", function (e) {
-          if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-            sidebar.classList.remove("active");
+      // Initialize charts and load data
+      document.addEventListener('DOMContentLoaded', function() {
+        // Department Chart
+        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+        const departmentChart = new Chart(departmentCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Kitchen', 'Housekeeping', 'Admin'],
+            datasets: [{
+              label: 'Acknowledged',
+              data: [8, 12, 6],
+              backgroundColor: '#2196f3'
+            }, {
+              label: 'Pending',
+              data: [2, 3, 2],
+              backgroundColor: '#ff9800'
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: { stacked: true },
+              y: { stacked: true }
+            }
           }
         });
+
+        // Policies Chart
+        const policiesCtx = document.getElementById('policiesChart').getContext('2d');
+        const policiesChart = new Chart(policiesCtx, {
+          type: 'pie',
+          data: {
+            labels: ['Signed', 'Pending'],
+            datasets: [{
+              data: [75, 25],
+              backgroundColor: ['#2196f3', '#ff9800']
+            }]
+          },
+          options: {
+            responsive: true
+          }
+        });
+
+        // Fetch and update statistics
+        // This would normally come from your API
+        updateStatistics();
       });
+
+      function updateStatistics() {
+        // Example data - replace with actual API calls
+        document.getElementById('totalShared').textContent = '45';
+        document.getElementById('totalAcknowledged').textContent = '35';
+        document.getElementById('pendingAcknowledgments').textContent = '10';
+        
+        const completionRate = 78;
+        document.getElementById('completionRate').textContent = `${completionRate}%`;
+        document.getElementById('completionProgress').style.width = `${completionRate}%`;
+      }
     </script>
-    <script src="js/dashboard.js"></script>
-    <script src="/js/shared.js"></script>
   </body>
 </html>
