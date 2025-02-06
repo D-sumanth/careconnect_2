@@ -16,26 +16,15 @@ body {
 .top-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 30px;
-  gap: 20px;
-}
-
-header {
-  text-align: left;
+  align-items: center;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(10px);
-  flex: 0 0 auto;
 }
 
 .logo {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
-  letter-spacing: -1px;
+  margin: 0;
 }
 
 .logo .blue-c {
@@ -43,23 +32,79 @@ header {
   text-shadow: 2px 2px 4px rgba(33, 150, 243, 0.2);
 }
 
-.info-box {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  flex: 0 0 auto;
-  min-width: 100px;
+.status-container {
+  display: flex;
+  align-items: center;
+  gap: 25px;
 }
 
-.info-box p {
-  margin: 8px 0;
+/* Count Chips Styles */
+.count-chips {
+  display: flex;
+  gap: 15px; /* Space between horizontal chips */
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-width: 140px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.chip.in-house {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+}
+
+.chip.admissions {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+}
+
+.chip-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.chip-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+
+/* Info Box Styles */
+.info-box {
+  background: white;
+  border-radius: 12px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  height: 65px; /* Matches logo height */
+  display: flex;
+  align-items: center;
+}
+
+.datetime {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.datetime p {
+  margin: 0;
   color: #2c3e50;
   font-size: 0.95rem;
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
 }
 
 .main-content {
@@ -306,6 +351,33 @@ header {
 @media (max-width: 768px) {
   .top-container {
     flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .status-container {
+    width: 100%;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .count-chips {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .chip {
+    min-width: 120px;
+  }
+
+  .info-box {
+    width: 100%;
+    height: auto;
+  }
+
+  .datetime {
+    width: 100%;
     align-items: center;
   }
 
@@ -316,10 +388,6 @@ header {
 
   .logo {
     font-size: 2rem;
-  }
-
-  .info-box {
-    width: 100%;
   }
 }
 
@@ -334,6 +402,26 @@ header {
     transform: translateY(0);
   }
 }
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation */
+.chip, .info-box {
+  animation: fadeInDown 0.5s ease backwards;
+}
+
+.chip:nth-child(1) { animation-delay: 0.1s; }
+.chip:nth-child(2) { animation-delay: 0.2s; }
+.info-box { animation-delay: 0.3s; }
 
 .info-block {
   animation: fadeInUp 0.6s ease backwards;

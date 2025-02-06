@@ -1,0 +1,26 @@
+.coming-soon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    text-align: center;
+}
+
+.coming-soon-message {
+    background: white;
+    padding: 2rem 4rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.coming-soon-message h2 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.coming-soon-message i {
+    font-size: 4rem;
+    color: #2196f3;
+    margin-bottom: 1rem;
+}
