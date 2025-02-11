@@ -4,7 +4,7 @@ async function submitForm(event) {
   // Get selected departments
   const selectedDepartments = Array.from(
     document.querySelectorAll(".option-chip.selected")
-  ).map((chip) => chip.textContent);
+  ).map((chip) => chip.textContent).join(", ");
 
   const formData = {
     home: document.getElementById("home").value,

@@ -4,57 +4,73 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Information Dashboard - CareConnect</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/css/common.css" />
     <link rel="stylesheet" href="/css/dashboard.css" />
     <link rel="stylesheet" href="/css/vertical-nav.css" />
     <!-- Add Chart.js for visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-  <div class="sidebar">
-    <header>
-      <h1 class="logo">
-        <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
-      </h1>
-    </header>
-    
-    <nav class="vertical-nav">
-      <ul>
-        <li><a href="index.html">
-          <i class="fas fa-home"></i>
-          <span>Home</span>
-        </a></li>
-        <li><a href="policies.html">
-          <i class="fas fa-book"></i>
-          <span>Policies</span>
-        </a></li>
-        <li><a href="dashboard.html" class="active">
-          <i class="fas fa-chart-line"></i>
-          <span>Admin Dashboard</span>
-        </a></li>
-        <li><a href="staff-dashboard.html">
-          <i class="fas fa-users"></i>
-          <span>Staff Dashboard</span>
-        </a></li>
-        <li><a href="invoices.html">
-          <i class="fas fa-receipt"></i>
-          <span>Invoices</span>
-      </a></li>
-      </ul>
-    </nav>
-  </div>
+  <body>
+    <div class="sidebar">
+      <header>
+        <h1 class="logo">
+          <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
+        </h1>
+      </header>
+
+      <nav class="vertical-nav">
+        <ul>
+          <li>
+            <a href="index.html">
+              <i class="fas fa-home"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="policies.html">
+              <i class="fas fa-book"></i>
+              <span>Policies</span>
+            </a>
+          </li>
+          <li>
+            <a href="dashboard.html" class="active">
+              <i class="fas fa-chart-line"></i>
+              <span>Admin Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="staff-dashboard.html">
+              <i class="fas fa-users"></i>
+              <span>Staff Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="invoices.html">
+              <i class="fas fa-receipt"></i>
+              <span>Invoices</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
 
     <div class="main-content">
-      <!-- Summary Statistics Cards -->
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-icon">
             <i class="fas fa-share-alt"></i>
           </div>
           <div class="stat-details">
-            <h3>Total Shared Information</h3>
-            <p class="stat-number" id="totalShared">0</p>
+            <h3>Total Information Shared</h3>
+            <p class="stat-number" id="totalInformation">0</p>
           </div>
         </div>
 
@@ -63,8 +79,9 @@
             <i class="fas fa-check-circle"></i>
           </div>
           <div class="stat-details">
-            <h3>Total Acknowledged</h3>
-            <p class="stat-number" id="totalAcknowledged">0</p>
+            <h3>Acknowledged</h3>
+            <p class="stat-number" id="acknowledgedCount">0</p>
+            <p class="stat-percentage" id="acknowledgedPercentage">0%</p>
           </div>
         </div>
 
@@ -73,21 +90,9 @@
             <i class="fas fa-clock"></i>
           </div>
           <div class="stat-details">
-            <h3>Pending Acknowledgments</h3>
-            <p class="stat-number" id="pendingAcknowledgments">0</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-percentage"></i>
-          </div>
-          <div class="stat-details">
-            <h3>Completion Rate</h3>
-            <div class="progress-bar">
-              <div class="progress" id="completionProgress"></div>
-            </div>
-            <p class="stat-number" id="completionRate">0%</p>
+            <h3>Pending</h3>
+            <p class="stat-number" id="pendingCount">0</p>
+            <p class="stat-percentage" id="pendingPercentage">0%</p>
           </div>
         </div>
       </div>
@@ -108,96 +113,115 @@
                 <th>Pending</th>
               </tr>
             </thead>
-            <tbody id="departmentTableBody">
-              <!-- Table rows will be populated dynamically -->
-            </tbody>
+            <tbody id="departmentTableBody"></tbody>
           </table>
-        </div>
-      </div>
-
-      <!-- Policies Compliance Section -->
-      <div class="dashboard-section">
-        <h2>Policies & Compliance</h2>
-        <div class="policies-grid">
-          <div class="policy-stat-card">
-            <h3>Total Policies</h3>
-            <p class="stat-number" id="totalPolicies">0</p>
-          </div>
-          <div class="policy-stat-card">
-            <h3>Signed Policies</h3>
-            <p class="stat-number" id="signedPolicies">0</p>
-          </div>
-          <div class="policy-stat-card">
-            <h3>Pending Signatures</h3>
-            <p class="stat-number" id="pendingPolicies">0</p>
-          </div>
-        </div>
-        <div class="chart-container">
-          <canvas id="policiesChart"></canvas>
         </div>
       </div>
     </div>
 
-    <script src="/js/shared.js"></script>
     <script>
-      // Initialize charts and load data
-      document.addEventListener('DOMContentLoaded', function() {
-        // Department Chart
-        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
-        const departmentChart = new Chart(departmentCtx, {
-          type: 'bar',
-          data: {
-            labels: ['Kitchen', 'Housekeeping', 'Admin'],
-            datasets: [{
-              label: 'Acknowledged',
-              data: [8, 12, 6],
-              backgroundColor: '#2196f3'
-            }, {
-              label: 'Pending',
-              data: [2, 3, 2],
-              backgroundColor: '#ff9800'
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: { stacked: true },
-              y: { stacked: true }
-            }
-          }
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        let departmentChart;
 
-        // Policies Chart
-        const policiesCtx = document.getElementById('policiesChart').getContext('2d');
-        const policiesChart = new Chart(policiesCtx, {
-          type: 'pie',
-          data: {
-            labels: ['Signed', 'Pending'],
-            datasets: [{
-              data: [75, 25],
-              backgroundColor: ['#2196f3', '#ff9800']
-            }]
-          },
-          options: {
-            responsive: true
-          }
-        });
+        async function fetchDashboardData() {
+          try {
+            const response = await fetch("/api/dashboard-stats");
+            const data = await response.json();
 
-        // Fetch and update statistics
-        // This would normally come from your API
-        updateStatistics();
+            updateInfoStats(data.infoStats);
+            updateDepartmentData(data.departmentStats);
+          } catch (error) {
+            console.error("Error fetching dashboard data:", error);
+          }
+        }
+
+        function updateInfoStats(stats) {
+          // Update numbers
+          document.getElementById("totalInformation").textContent =
+            stats.totalInformation;
+          document.getElementById("acknowledgedCount").textContent =
+            stats.acknowledgedCount;
+          document.getElementById("pendingCount").textContent =
+            stats.pendingCount;
+
+          // Calculate and update percentages
+          const acknowledgedPercentage =
+            Math.round(
+              (stats.acknowledgedCount / stats.totalInformation) * 100
+            ) || 0;
+          const pendingPercentage =
+            Math.round((stats.pendingCount / stats.totalInformation) * 100) ||
+            0;
+
+          document.getElementById(
+            "acknowledgedPercentage"
+          ).textContent = `${acknowledgedPercentage}%`;
+          document.getElementById(
+            "pendingPercentage"
+          ).textContent = `${pendingPercentage}%`;
+        }
+
+        function updateDepartmentData(departmentStats) {
+          // Update department chart
+          const labels = departmentStats.map((dept) => dept.department);
+          const acknowledged = departmentStats.map((dept) => dept.acknowledged);
+          const pending = departmentStats.map((dept) => dept.pending);
+
+          if (departmentChart) {
+            departmentChart.destroy();
+          }
+
+          const departmentCtx = document
+            .getElementById("departmentChart")
+            .getContext("2d");
+          departmentChart = new Chart(departmentCtx, {
+            type: "bar",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "Acknowledged",
+                  data: acknowledged,
+                  backgroundColor: "#2196f3",
+                },
+                {
+                  label: "Pending",
+                  data: pending,
+                  backgroundColor: "#ff9800",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: { stacked: true },
+                y: { stacked: true },
+              },
+            },
+          });
+
+          // Update department table
+          const tableBody = document.getElementById("departmentTableBody");
+          tableBody.innerHTML = departmentStats
+            .map(
+              (dept) => `
+                <tr>
+                    <td>${dept.department}</td>
+                    <td>${dept.totalNotices}</td>
+                    <td>${dept.acknowledged}</td>
+                    <td>${dept.pending}</td>
+                </tr>
+            `
+            )
+            .join("");
+        }
+
+        // Initial load
+        fetchDashboardData();
+
+        // Refresh data every 5 minutes
+        setInterval(fetchDashboardData, 5 * 60 * 1000);
       });
-
-      function updateStatistics() {
-        // Example data - replace with actual API calls
-        document.getElementById('totalShared').textContent = '45';
-        document.getElementById('totalAcknowledged').textContent = '35';
-        document.getElementById('pendingAcknowledgments').textContent = '10';
-        
-        const completionRate = 78;
-        document.getElementById('completionRate').textContent = `${completionRate}%`;
-        document.getElementById('completionProgress').style.width = `${completionRate}%`;
-      }
     </script>
   </body>
 </html>

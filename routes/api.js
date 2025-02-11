@@ -46,7 +46,7 @@ router.post("/forms", async (req, res) => {
         information,
         authorizedBy,
         state,
-        JSON.stringify(sendTo),
+        sendTo,
       ]
     );
 
@@ -193,5 +193,102 @@ router.get("/forms", async (req, res) => {
     });
   }
 });
+
+// Add these new endpoints to api.js
+router.get('/dashboard-stats', async (req, res) => {
+  try {
+    // Get counts of fully acknowledged information blocks
+    const [infoStats] = await db.query(`
+      WITH AcknowledgmentCounts AS (
+        SELECT 
+          i.id,
+          i.department,
+          CASE 
+            WHEN COUNT(DISTINCT t.staff_id) = (
+              SELECT COUNT(*) 
+              FROM staff 
+              WHERE department = i.department
+            ) THEN 1 
+            ELSE 0 
+          END as is_fully_acknowledged
+        FROM information i
+        LEFT JOIN tempstaff t ON i.id = t.info_id
+        GROUP BY i.id, i.department
+      )
+      SELECT
+        COUNT(*) as totalInformation,
+        SUM(is_fully_acknowledged) as acknowledgedCount,
+        COUNT(*) - SUM(is_fully_acknowledged) as pendingCount
+      FROM AcknowledgmentCounts
+    `);
+
+    // Get department breakdown
+    const [departmentStats] = await db.query(`
+      WITH DepartmentAcknowledgments AS (
+        SELECT 
+          i.department,
+          i.id as info_id,
+          CASE 
+            WHEN COUNT(DISTINCT t.staff_id) = (
+              SELECT COUNT(*) 
+              FROM staff 
+              WHERE department = i.department
+            ) THEN 1 
+            ELSE 0 
+          END as is_fully_acknowledged
+        FROM information i
+        LEFT JOIN tempstaff t ON i.id = t.info_id
+        GROUP BY i.department, i.id
+      )
+      SELECT 
+        department,
+        COUNT(*) as totalNotices,
+        SUM(is_fully_acknowledged) as acknowledged,
+        COUNT(*) - SUM(is_fully_acknowledged) as pending
+      FROM DepartmentAcknowledgments
+      GROUP BY department
+    `);
+
+    res.json({
+      infoStats: infoStats[0],
+      departmentStats
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Add endpoint to check individual acknowledgment status
+router.get('/acknowledgment-status/:infoId', async (req, res) => {
+  try {
+    const { infoId } = req.params;
+    
+    const [status] = await db.query(`
+      SELECT 
+        CASE 
+          WHEN COUNT(DISTINCT t.staff_id) = (
+            SELECT COUNT(*) 
+            FROM staff 
+            WHERE department = i.department
+          ) THEN true 
+          ELSE false 
+        END as isFullyAcknowledged
+      FROM information i
+      LEFT JOIN tempstaff t ON i.id = t.info_id
+      WHERE i.id = ?
+      GROUP BY i.id, i.department
+    `, [infoId]);
+
+    res.json({ 
+      isFullyAcknowledged: status[0]?.isFullyAcknowledged || false 
+    });
+  } catch (error) {
+    console.error('Error checking acknowledgment status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 module.exports = router;
