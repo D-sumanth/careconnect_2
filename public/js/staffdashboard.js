@@ -48,6 +48,33 @@ async function populateStaffNames(selectElement) {
   }
 }
 
+function showPopup(message, isSuccess) {
+  const popup = document.getElementById("custom-popup");
+  const popupMessage = document.getElementById("popup-message");
+  const popupContent = popup.querySelector(".popup-content");
+
+  popupMessage.textContent = message;
+  popupContent.className =
+    "popup-content " + (isSuccess ? "popup-success" : "popup-error");
+  popup.style.display = "block";
+
+  const closeBtn = popup.querySelector(".close-popup");
+  closeBtn.onclick = function () {
+    popup.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target == popup) {
+      popup.style.display = "none";
+    }
+  };
+
+  // Automatically close the popup after 3 seconds
+  setTimeout(() => {
+    popup.style.display = "none";
+  }, 3000);
+}
+
 function createInfoBox(info) {
   const box = document.createElement("div");
   box.className = "info-box-item";
@@ -228,11 +255,26 @@ async function acknowledgeInfo(infoId, button) {
   const staffId = staffSelect.value;
 
   if (!staffId) {
-    alert("Please select your name before acknowledging.");
+    showPopup("Please select your name before acknowledging.", false);
     return;
   }
 
   try {
+    // First check if staff has already acknowledged
+    const checkResponse = await fetch(`/api/acknowledgments/${infoId}`);
+    const existingAcknowledgments = await checkResponse.json();
+    
+    // Check if this staff member has already acknowledged
+    const hasAlreadyAcknowledged = existingAcknowledgments.some(
+      ack => ack.staff_id === staffId
+    );
+
+    if (hasAlreadyAcknowledged) {
+      showPopup("You have already acknowledged this information.", false);
+      return;
+    }
+
+    // Proceed with acknowledgment if not already done
     const response = await fetch("/api/acknowledge", {
       method: "POST",
       headers: {
@@ -246,7 +288,7 @@ async function acknowledgeInfo(infoId, button) {
 
     const result = await response.json();
     if (result.success) {
-      alert("Information acknowledged successfully!");
+      showPopup("Information acknowledged successfully!", true);
       modal.closest(".modal").remove();
 
       // Check acknowledgment status for the info box
@@ -254,10 +296,12 @@ async function acknowledgeInfo(infoId, button) {
       if (infoBox) {
         checkAcknowledgmentStatus(infoId, infoBox);
       }
+    } else if (result.error === 'ALREADY_ACKNOWLEDGED') {
+      showPopup("You have already acknowledged this information.", false);
     }
   } catch (error) {
     console.error("Error acknowledging information:", error);
-    alert("Failed to acknowledge information");
+    showPopup("Failed to acknowledge information", false);
   }
 }
 

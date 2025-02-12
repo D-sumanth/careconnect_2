@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Staff Dashboard - CareConnect</title>
     <link
       rel="stylesheet"
@@ -12,8 +12,8 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/staff.css">
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/staff.css" />
   </head>
   <body>
     <div class="top-container">
@@ -22,7 +22,7 @@
           <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
         </h1>
       </header>
-  
+
       <div class="status-container">
         <div class="count-chips">
           <div class="chip in-house">
@@ -34,7 +34,7 @@
             <span class="chip-value" id="new-admissions-display">0</span>
           </div>
         </div>
-        
+
         <div class="info-box">
           <div class="datetime">
             <p>Date: <span id="current-date"></span></p>
@@ -101,10 +101,16 @@
     </script>
     <script src="/js/staffdashboard.js"></script>
     <script src="/js/shared.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    InfoManager.init();
-  });
-</script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        InfoManager.init();
+      });
+    </script>
+    <div id="custom-popup" class="custom-popup">
+      <div class="popup-content">
+        <span class="close-popup">&times;</span>
+        <p id="popup-message"></p>
+      </div>
+    </div>    
   </body>
 </html>

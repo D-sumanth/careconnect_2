@@ -81,7 +81,6 @@ body {
   font-weight: 600;
 }
 
-
 /* Info Box Styles */
 .info-box {
   background: white;
@@ -244,9 +243,68 @@ body {
   font-size: 0.9rem;
 }
 
+.custom-popup {
+  display: none;
+  position: fixed;
+  z-index: 1001; /* Increased z-index to appear above other modals */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.popup-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  text-align: center;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close-popup {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-popup:hover,
+.close-popup:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.popup-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.popup-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+#popup-message {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 1rem;
+}
+
 /* Animation for loading spinner */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .fa-spin {
@@ -268,7 +326,6 @@ body {
     width: 100%;
   }
 }
-
 
 /* Info Box Styling */
 .info-box-item {
@@ -493,13 +550,20 @@ body {
 }
 
 /* Animation */
-.chip, .info-box {
+.chip,
+.info-box {
   animation: fadeInDown 0.5s ease backwards;
 }
 
-.chip:nth-child(1) { animation-delay: 0.1s; }
-.chip:nth-child(2) { animation-delay: 0.2s; }
-.info-box { animation-delay: 0.3s; }
+.chip:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.chip:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.info-box {
+  animation-delay: 0.3s;
+}
 
 .info-block {
   animation: fadeInUp 0.6s ease backwards;

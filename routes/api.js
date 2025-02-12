@@ -114,18 +114,37 @@ router.get("/acknowledgment-status/:infoId", async (req, res) => {
   }
 });
 
+
 // Acknowledge info
 router.post("/acknowledge", async (req, res) => {
   const { infoId, staffId } = req.body;
   try {
+    // Check for existing acknowledgment
+    const [existingAck] = await db.query(
+      'SELECT * FROM tempstaff WHERE info_id = ? AND staff_id = ?',
+      [infoId, staffId]
+    );
+
+    if (existingAck.length > 0) {
+      return res.json({
+        success: false,
+        error: 'ALREADY_ACKNOWLEDGED',
+        message: 'Staff member has already acknowledged this information'
+      });
+    }
+
     await db.query(
       "INSERT INTO tempstaff (info_id, staff_id, acknowledged_at) VALUES (?, ?, NOW())",
       [infoId, staffId]
     );
     res.json({ success: true });
   } catch (error) {
-    console.error("Error saving acknowledgment:", error);
-    res.status(500).json({ error: "Failed to save acknowledgment" });
+    console.error('Error in acknowledgment:', error);
+    res.status(500).json({
+      success: false,
+      error: 'SERVER_ERROR',
+      message: 'Internal server error'
+    });
   }
 });
 
