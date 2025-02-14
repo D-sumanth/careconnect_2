@@ -239,8 +239,8 @@
                     // Add total to tooltip
                     afterBody: function (tooltipItems) {
                       const index = tooltipItems[0].dataIndex;
-                      const ack = acknowledged[index];
-                      const pend = pending[index];
+                      const ack = Number(acknowledged[index]);
+                      const pend = Number(pending[index]);
                       const total = ack + pend;
                       return `Total: ${total}`;
                     },
