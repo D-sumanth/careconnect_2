@@ -172,34 +172,154 @@ body {
 
 .info-box-item.fully-acknowledged {
   background-color: rgba(76, 175, 80, 0.1);
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
-.stat-number, .stat-percentage {
+.stat-number,
+.stat-percentage {
   transition: all 0.3s ease;
+}
+
+/* Add to your dashboard.css */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.chart-wrapper {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-wrapper h3 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.chart-container {
+  height: 400px;
+  width: 100%;
+  position: relative;
+}
+
+.insights-summary {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.insight-card {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.insight-card h4 {
+  color: #495057;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.insight-card p {
+  color: #2196f3;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    height: 350px;
+  }
+}
+
+/* Optional: Adjust table for better fit */
+.table-container {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+}
+
+.department-table {
+  font-size: 0.9rem;
 }
 
 /* Optional: Add animation for updating numbers */
 @keyframes highlight {
-  0% { color: #2196f3; }
-  100% { color: inherit; }
+  0% {
+    color: #2196f3;
+  }
+  100% {
+    color: inherit;
+  }
 }
 
 .stat-update {
   animation: highlight 1s ease;
 }
 
+.chart-container {
+  height: 400px;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.department-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.department-table th,
+.department-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.department-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.department-table tr:last-child td {
+  border-bottom: none;
+}
+
+.department-table tr:hover {
+  background-color: #f8f9fa;
+}
 
 /* Add animation for loading spinner */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .fa-spin {
   animation: spin 1s linear infinite;
 }
-
 
 /* Animation */
 @keyframes fadeInUp {
@@ -229,7 +349,7 @@ body {
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .policies-grid {
     grid-template-columns: 1fr;
   }

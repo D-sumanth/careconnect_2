@@ -99,22 +99,47 @@
 
       <!-- Department Breakdown Section -->
       <div class="dashboard-section">
-        <h2>Department Acknowledgment Status</h2>
-        <div class="chart-container">
-          <canvas id="departmentChart"></canvas>
-        </div>
-        <div class="table-container">
-          <table class="department-table">
-            <thead>
-              <tr>
-                <th>Department</th>
-                <th>Total Notices</th>
-                <th>Acknowledged</th>
-                <th>Pending</th>
-              </tr>
-            </thead>
-            <tbody id="departmentTableBody"></tbody>
-          </table>
+        <div class="charts-grid">
+          <!-- Left column - Department Stats -->
+          <div class="chart-wrapper">
+            <h3>Department Information Status</h3>
+            <div class="chart-container">
+              <canvas id="departmentChart"></canvas>
+            </div>
+            <!-- Optional: Table below the chart -->
+            <div class="table-container">
+              <table class="department-table">
+                <thead>
+                  <tr>
+                    <th>Department</th>
+                    <th>Acknowledged</th>
+                    <th>Pending</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="departmentTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right column - Additional Insights -->
+          <div class="chart-wrapper">
+            <h3>Information Overview</h3>
+            <div class="chart-container">
+              <canvas id="overviewChart"></canvas>
+            </div>
+            <!-- Add any additional insights or stats here -->
+            <div class="insights-summary">
+              <div class="insight-card">
+                <h4>Top Performing Department</h4>
+                <p id="topDepartment">Loading...</p>
+              </div>
+              <div class="insight-card">
+                <h4>Average Response Time</h4>
+                <p id="avgResponseTime">Loading...</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -163,7 +188,7 @@
 
         function updateDepartmentData(departmentStats) {
           // Update department chart
-          const labels = departmentStats.map((dept) => dept.department);
+          const labels = departmentStats.map((dept) => dept.sending_department);
           const acknowledged = departmentStats.map((dept) => dept.acknowledged);
           const pending = departmentStats.map((dept) => dept.pending);
 
@@ -182,36 +207,87 @@
                 {
                   label: "Acknowledged",
                   data: acknowledged,
-                  backgroundColor: "#2196f3",
+                  backgroundColor: "#2196f3", // Blue
+                  borderColor: "#1976d2",
+                  borderWidth: 1,
                 },
                 {
                   label: "Pending",
                   data: pending,
-                  backgroundColor: "#ff9800",
+                  backgroundColor: "#ff9800", // Orange
+                  borderColor: "#f57c00",
+                  borderWidth: 1,
                 },
               ],
             },
             options: {
               responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+                title: {
+                  display: true,
+                  text: "Information Distribution by Department",
+                  font: {
+                    size: 16,
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    // Add total to tooltip
+                    afterBody: function (tooltipItems) {
+                      const index = tooltipItems[0].dataIndex;
+                      const ack = acknowledged[index];
+                      const pend = pending[index];
+                      const total = ack + pend;
+                      return `Total: ${total}`;
+                    },
+                  },
+                },
+              },
               scales: {
-                x: { stacked: true },
-                y: { stacked: true },
+                x: {
+                  title: {
+                    display: true,
+                    text: "Department",
+                    font: {
+                      weight: "bold",
+                    },
+                  },
+                  stacked: true,
+                },
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Number of Information Forms",
+                    font: {
+                      weight: "bold",
+                    },
+                  },
+                  stacked: true,
+                  ticks: {
+                    precision: 0, // Show whole numbers only
+                  },
+                },
               },
             },
           });
 
-          // Update department table
+          // Update department table with totals
           const tableBody = document.getElementById("departmentTableBody");
           tableBody.innerHTML = departmentStats
             .map(
               (dept) => `
-                <tr>
-                    <td>${dept.department}</td>
-                    <td>${dept.totalNotices}</td>
-                    <td>${dept.acknowledged}</td>
-                    <td>${dept.pending}</td>
-                </tr>
-            `
+        <tr>
+          <td>${dept.sending_department}</td>
+          <td>${dept.acknowledged}</td>
+          <td>${dept.pending}</td>
+          <td>${dept.acknowledged + dept.pending}</td>
+        </tr>
+      `
             )
             .join("");
         }

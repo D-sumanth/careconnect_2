@@ -247,31 +247,39 @@ LEFT JOIN (
     `);
 
     // Get department breakdown
+    // In the /dashboard-stats endpoint, modify the departmentStats query
     const [departmentStats] = await db.query(`
-      WITH DepartmentAcknowledgments AS (
-        SELECT 
-          i.department,
-          i.id as info_id,
-          CASE 
-            WHEN COUNT(DISTINCT t.staff_id) = (
-              SELECT COUNT(*) 
-              FROM staff 
-              WHERE department = i.department
-            ) THEN 1 
-            ELSE 0 
-          END as is_fully_acknowledged
-        FROM information i
-        LEFT JOIN tempstaff t ON i.id = t.info_id
-        GROUP BY i.department, i.id
-      )
-      SELECT 
-        department,
-        COUNT(*) as totalNotices,
-        SUM(is_fully_acknowledged) as acknowledged,
-        COUNT(*) - SUM(is_fully_acknowledged) as pending
-      FROM DepartmentAcknowledgments
-      GROUP BY department
-    `);
+  SELECT 
+    i.department as sending_department,
+    COUNT(*) as total_sent,
+    SUM(
+      CASE 
+        WHEN COALESCE(t_count.ack_count, 0) >= COALESCE(s_count.staff_count, 0) 
+        AND s_count.staff_count > 0 THEN 1 
+        ELSE 0 
+      END
+    ) as acknowledged,
+    COUNT(*) - SUM(
+      CASE 
+        WHEN COALESCE(t_count.ack_count, 0) >= COALESCE(s_count.staff_count, 0) 
+        AND s_count.staff_count > 0 THEN 1 
+        ELSE 0 
+      END
+    ) as pending
+  FROM information i
+  LEFT JOIN (
+    SELECT info_id, COUNT(DISTINCT staff_id) as ack_count
+    FROM tempstaff
+    GROUP BY info_id
+  ) t_count ON i.id = t_count.info_id
+  LEFT JOIN (
+    SELECT department, COUNT(*) as staff_count
+    FROM staff
+    GROUP BY department
+  ) s_count ON i.department = s_count.department
+  GROUP BY i.department
+  ORDER BY i.department
+`);
 
     res.json({
       infoStats: infoStats[0],
