@@ -5,6 +5,28 @@
         font-family: "Poppins", sans-serif;
       }
 
+      .session-bar {
+        align-items: center;
+        background: #24364b;
+        border-radius: 6px;
+        color: #fff;
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+        margin-bottom: 16px;
+        padding: 10px 14px;
+      }
+
+      .session-bar button {
+        background: #fff;
+        border: 0;
+        border-radius: 5px;
+        color: #24364b;
+        cursor: pointer;
+        font-weight: 600;
+        padding: 7px 10px;
+      }
+
       body {
         background: linear-gradient(135deg, #f5f7fa 0%, #e3eeff 100%);
         min-height: 100vh;

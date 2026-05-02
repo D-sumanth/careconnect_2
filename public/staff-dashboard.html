@@ -86,6 +86,10 @@
       updateDateTime();
       setInterval(updateDateTime, 1000);
     </script>
+    <script src="/js/auth.js"></script>
+    <script>
+      requireCurrentUser(["employee", "admin"]);
+    </script>
     <script src="/js/staffdashboard.js"></script>
     <script src="/js/shared.js"></script>
 <script>

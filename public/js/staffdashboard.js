@@ -159,7 +159,17 @@ function showModal(infoString, isAcknowledge) {
 
   document.body.appendChild(modal);
 
-  if (isAcknowledge) {
+  if (isAcknowledge && window.CareConnectUser?.role === "employee") {
+    const acknowledgeSection = modal.querySelector(".acknowledge-section");
+    acknowledgeSection.innerHTML = `
+        <p class="signed-in-acknowledgment">
+          Signed in as ${window.CareConnectUser.name}
+        </p>
+        <button class="modal-acknowledge-btn" onclick="acknowledgeInfo('${info.id}', this)">
+            Acknowledge
+        </button>
+    `;
+  } else if (isAcknowledge) {
     const staffSelect = modal.querySelector(".staff-select");
     populateStaffNames(staffSelect);
   } else {
@@ -225,9 +235,9 @@ async function loadAcknowledgments(infoId, container) {
 async function acknowledgeInfo(infoId, button) {
   const modal = button.closest(".modal-content");
   const staffSelect = modal.querySelector(".staff-select");
-  const staffId = staffSelect.value;
+  const staffId = staffSelect ? staffSelect.value : window.CareConnectUser?.staffId;
 
-  if (!staffId) {
+  if (!staffId && window.CareConnectUser?.role !== "employee") {
     alert("Please select your name before acknowledging.");
     return;
   }

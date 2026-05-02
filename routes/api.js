@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/database");
+const { requireAuth, requireRole } = require("../config/auth");
 
 router.use(async (req, res, next) => {
   try {
@@ -13,6 +14,8 @@ router.use(async (req, res, next) => {
     });
   }
 });
+
+router.use(requireAuth);
 
 // Test database connection
 router.get("/test", async (req, res) => {
@@ -33,7 +36,7 @@ router.get("/test", async (req, res) => {
 });
 
 // Submit form
-router.post("/forms", async (req, res) => {
+router.post("/forms", requireRole("admin"), async (req, res) => {
   try {
     const {
       home,
@@ -79,7 +82,7 @@ router.post("/forms", async (req, res) => {
 });
 
 // Get all staff members
-router.get("/staff", async (req, res) => {
+router.get("/staff", requireRole("admin"), async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM staff ORDER BY name");
     res.json(rows);
@@ -129,14 +132,32 @@ router.get("/acknowledgment-status/:infoId", async (req, res) => {
 });
 
 // Acknowledge info
-router.post("/acknowledge", async (req, res) => {
-  const { infoId, staffId } = req.body;
+router.post("/acknowledge", requireRole("employee", "admin"), async (req, res) => {
+  const infoId = req.body.infoId;
+  const staffId = req.user.role === "employee" ? req.user.staffId : req.body.staffId;
+
+  if (!staffId) {
+    res.status(400).json({ error: "No staff profile is linked to this user" });
+    return;
+  }
+
   try {
     await db.query(
       `INSERT INTO tempstaff (info_id, staff_id, acknowledged_at)
        VALUES (?, ?, NOW())
        ON CONFLICT (info_id, staff_id) DO NOTHING`,
       [infoId, staffId]
+    );
+    await db.query(
+      `INSERT INTO audit_log (user_id, action, entity_type, entity_id, metadata)
+       VALUES (?, ?, ?, ?, ?::jsonb)`,
+      [
+        req.user.id,
+        "acknowledge_notice",
+        "information",
+        Number(infoId),
+        JSON.stringify({ staffId }),
+      ]
     );
     res.json({ success: true });
   } catch (error) {
@@ -159,7 +180,7 @@ router.get("/counts", async (req, res) => {
 });
 
 // Update counts
-router.post("/update-counts", async (req, res) => {
+router.post("/update-counts", requireRole("admin"), async (req, res) => {
   try {
     const { inHouse, newAdmissions } = req.body;
     await db.query(
@@ -174,7 +195,7 @@ router.post("/update-counts", async (req, res) => {
 });
 
 // Add staff
-router.post("/add-staff", async (req, res) => {
+router.post("/add-staff", requireRole("admin"), async (req, res) => {
   try {
     const { name, department } = req.body;
     if (!name || !department) {
@@ -196,9 +217,22 @@ router.post("/add-staff", async (req, res) => {
 // Get all forms
 router.get("/forms", async (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT * FROM information ORDER BY created_at DESC"
-    );
+    const [rows] =
+      req.user.role === "admin"
+        ? await db.query("SELECT * FROM information ORDER BY created_at DESC")
+        : await db.query(
+            `SELECT *
+             FROM information
+             WHERE send_to @> ?::jsonb
+                OR send_to @> ?::jsonb
+                OR LOWER(department) = LOWER(?)
+             ORDER BY created_at DESC`,
+            [
+              JSON.stringify(["All"]),
+              JSON.stringify([req.user.department || ""]),
+              req.user.department || "",
+            ]
+          );
     res.json(rows);
   } catch (error) {
     console.error("Error fetching forms:", error);

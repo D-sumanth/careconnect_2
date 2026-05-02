@@ -79,6 +79,33 @@ async function initializeDatabase() {
       UNIQUE (info_id, staff_id)
     );
   `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS app_users (
+      id SERIAL PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      name TEXT NOT NULL,
+      role TEXT NOT NULL CHECK (role IN ('admin', 'employee')),
+      staff_id INTEGER REFERENCES staff(id) ON DELETE SET NULL,
+      department TEXT,
+      is_active BOOLEAN NOT NULL DEFAULT TRUE,
+      last_login_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS audit_log (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES app_users(id) ON DELETE SET NULL,
+      action TEXT NOT NULL,
+      entity_type TEXT,
+      entity_id INTEGER,
+      metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
 }
 
 let initializationPromise;

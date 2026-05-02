@@ -399,6 +399,14 @@ header {
 .modal-acknowledge-btn:hover {
   background: #388e3c;
 }
+
+.signed-in-acknowledgment {
+  color: #2c3e50;
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
 .acknowledgment-status {
   font-size: 0.8rem;
   color: #4caf50;

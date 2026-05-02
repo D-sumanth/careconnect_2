@@ -23,4 +23,24 @@ body {
   text-shadow: 2px 2px 4px rgba(33, 150, 243, 0.2);
 }
 
+.session-bar {
+  align-items: center;
+  background: #24364b;
+  border-radius: 6px;
+  color: #fff;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+}
 
+.session-bar button {
+  background: #fff;
+  border: 0;
+  border-radius: 5px;
+  color: #24364b;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 7px 10px;
+}
