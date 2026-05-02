@@ -103,6 +103,13 @@ select:focus {
   width: 18px;
 }
 
+.helper-text {
+  color: #607086;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  margin-top: -2px;
+}
+
 button {
   background: #1976d2;
   border: 0;

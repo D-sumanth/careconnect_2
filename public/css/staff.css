@@ -405,6 +405,12 @@ header {
   font-size: 0.9rem;
 }
 
+.ack-select-label {
+  color: #2c3e50;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .modal-acknowledge-btn {
   background: #4caf50;
   color: white;

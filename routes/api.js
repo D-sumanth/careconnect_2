@@ -48,6 +48,19 @@ async function staffIsTargeted(infoId, staffId) {
   return Boolean(rows[0]);
 }
 
+async function staffMatchesUserDepartment(staffId, department) {
+  const [rows] = await db.query(
+    `SELECT 1 AS ok
+     FROM staff
+     WHERE id = ?
+       AND LOWER(department) = LOWER(?)
+     LIMIT 1`,
+    [staffId, department || ""]
+  );
+
+  return Boolean(rows[0]);
+}
+
 // Test database connection
 router.get("/test", async (req, res) => {
   try {
@@ -120,6 +133,38 @@ router.get("/staff", requireRole("admin"), async (req, res) => {
   } catch (error) {
     console.error("Error fetching staff:", error);
     res.status(500).json({ error: "Failed to fetch staff" });
+  }
+});
+
+// Get staff list scoped for acknowledgment on shared department devices
+router.get("/department-staff", requireRole("employee", "admin"), async (req, res) => {
+  try {
+    const departmentFilter =
+      req.user.role === "admin"
+        ? String(req.query.department || "").trim()
+        : req.user.department;
+
+    if (!departmentFilter) {
+      res.json({ staff: [] });
+      return;
+    }
+
+    const [rows] = await db.query(
+      `SELECT DISTINCT s.id, s.name, s.department
+       FROM staff s
+       JOIN app_users u
+         ON u.staff_id = s.id
+        AND u.role = 'employee'
+        AND u.is_active = TRUE
+       WHERE LOWER(s.department) = LOWER(?)
+       ORDER BY s.name`,
+      [departmentFilter]
+    );
+
+    res.json({ staff: rows });
+  } catch (error) {
+    console.error("Error fetching department staff:", error);
+    res.status(500).json({ error: "Failed to fetch department staff" });
   }
 });
 
@@ -212,14 +257,29 @@ router.get(
 // Acknowledge info
 router.post("/acknowledge", requireRole("employee", "admin"), async (req, res) => {
   const infoId = req.body.infoId;
-  const staffId = req.user.role === "employee" ? req.user.staffId : req.body.staffId;
+  const requestedStaffId = req.body.staffId ? Number(req.body.staffId) : null;
+  const staffId =
+    req.user.role === "employee" ? req.user.staffId || requestedStaffId : requestedStaffId;
 
   if (!staffId) {
-    res.status(400).json({ error: "No staff profile is linked to this user" });
+    res.status(400).json({ error: "Staff selection is required for acknowledgment" });
     return;
   }
 
   try {
+    if (req.user.role === "employee" && !req.user.staffId) {
+      const matchesDepartment = await staffMatchesUserDepartment(
+        staffId,
+        req.user.department
+      );
+      if (!matchesDepartment) {
+        res.status(403).json({
+          error: "Selected staff member is not in this device department",
+        });
+        return;
+      }
+    }
+
     const isTargeted = await staffIsTargeted(infoId, staffId);
     if (!isTargeted) {
       res.status(403).json({
@@ -242,7 +302,11 @@ router.post("/acknowledge", requireRole("employee", "admin"), async (req, res) =
         "acknowledge_notice",
         "information",
         Number(infoId),
-        JSON.stringify({ staffId }),
+        JSON.stringify({
+          staffId,
+          acknowledgedByLogin: req.user.email,
+          sharedDeviceMode: Boolean(req.user.role === "employee" && !req.user.staffId),
+        }),
       ]
     );
     res.json({ success: true });

@@ -3,6 +3,7 @@ const staffColumns = {
   routine: document.getElementById("routineContent"),
   "event-based": document.getElementById("eventContent"),
 };
+let departmentStaff = [];
 
 function escapeHtml(value) {
   return String(value || "").replace(/[&<>"']/g, (character) => {
@@ -49,6 +50,12 @@ async function fetchInformation() {
   } catch (error) {
     console.error("Error fetching information:", error);
   }
+}
+
+async function ensureDepartmentStaffLoaded() {
+  if (window.CareConnectUser?.staffId || departmentStaff.length > 0) return;
+  const data = await fetchJson("/api/department-staff");
+  departmentStaff = data.staff || [];
 }
 
 function createInfoBox(info) {
@@ -110,9 +117,22 @@ function showModal(infoString, isAcknowledge) {
           isAcknowledge
             ? `
               <div class="acknowledge-section">
-                <p class="signed-in-acknowledgment">
-                  Signed in as ${escapeHtml(window.CareConnectUser?.name || "")}
-                </p>
+                ${
+                  window.CareConnectUser?.staffId
+                    ? `<p class="signed-in-acknowledgment">
+                        Signed in as ${escapeHtml(window.CareConnectUser?.name || "")}
+                      </p>`
+                    : `<label class="ack-select-label" for="ack-staff-select">Acknowledge as</label>
+                       <select id="ack-staff-select" class="staff-select">
+                        <option value="">Select staff name</option>
+                        ${departmentStaff
+                          .map(
+                            (staff) =>
+                              `<option value="${staff.id}">${escapeHtml(staff.name)}</option>`
+                          )
+                          .join("")}
+                       </select>`
+                }
                 <button class="modal-acknowledge-btn" type="button" onclick="acknowledgeInfo('${info.id}', this)">
                   Confirm Acknowledgment
                 </button>
@@ -133,11 +153,23 @@ function showModal(infoString, isAcknowledge) {
 
 async function acknowledgeInfo(infoId, button) {
   button.disabled = true;
+  const modal = button.closest(".modal");
+  const select = modal.querySelector("#ack-staff-select");
+  const selectedStaffId = select ? Number(select.value) : null;
+
+  if (!window.CareConnectUser?.staffId && !selectedStaffId) {
+    alert("Please choose which staff member is acknowledging this notice.");
+    button.disabled = false;
+    return;
+  }
 
   try {
     await fetchJson("/api/acknowledge", {
       method: "POST",
-      body: JSON.stringify({ infoId }),
+      body: JSON.stringify({
+        infoId,
+        staffId: selectedStaffId,
+      }),
     });
     button.closest(".modal").remove();
     await fetchInformation();
@@ -147,5 +179,8 @@ async function acknowledgeInfo(infoId, button) {
   }
 }
 
-fetchInformation();
+Promise.resolve()
+  .then(ensureDepartmentStaffLoaded)
+  .then(fetchInformation);
+
 setInterval(fetchInformation, 30000);
