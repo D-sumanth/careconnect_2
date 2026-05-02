@@ -2,10 +2,22 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/database");
 
+router.use(async (req, res, next) => {
+  try {
+    await db.ready();
+    next();
+  } catch (error) {
+    res.status(500).json({
+      error: "Database is not ready",
+      details: error.message,
+    });
+  }
+});
+
 // Test database connection
 router.get("/test", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT 1");
+    const [rows] = await db.query("SELECT 1 AS ok");
     res.json({
       message: "Database connection successful",
       data: rows,
@@ -37,7 +49,8 @@ router.post("/forms", async (req, res) => {
     const [result] = await db.query(
       `INSERT INTO information 
       (home, department, name, designation, information, authorized_by, state_type, send_to) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?::jsonb)
+      RETURNING id`,
       [
         home,
         department,
@@ -53,7 +66,7 @@ router.post("/forms", async (req, res) => {
     res.json({
       success: true,
       message: "Form submitted successfully",
-      id: result.insertId,
+      id: result[0]?.id,
     });
   } catch (error) {
     console.error("Error submitting form:", error);
@@ -104,9 +117,10 @@ router.get("/acknowledgment-status/:infoId", async (req, res) => {
     );
 
     res.json({
-      isFullyAcknowledged: ackCount[0].count === staffCount[0].total,
-      totalStaff: staffCount[0].total,
-      acknowledgedCount: ackCount[0].count,
+      isFullyAcknowledged:
+        Number(ackCount[0].count) === Number(staffCount[0].total),
+      totalStaff: Number(staffCount[0].total),
+      acknowledgedCount: Number(ackCount[0].count),
     });
   } catch (error) {
     console.error("Error checking acknowledgment status:", error);
@@ -119,7 +133,9 @@ router.post("/acknowledge", async (req, res) => {
   const { infoId, staffId } = req.body;
   try {
     await db.query(
-      "INSERT INTO tempstaff (info_id, staff_id, acknowledged_at) VALUES (?, ?, NOW())",
+      `INSERT INTO tempstaff (info_id, staff_id, acknowledged_at)
+       VALUES (?, ?, NOW())
+       ON CONFLICT (info_id, staff_id) DO NOTHING`,
       [infoId, staffId]
     );
     res.json({ success: true });

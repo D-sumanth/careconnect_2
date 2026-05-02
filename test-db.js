@@ -1,18 +1,17 @@
-const mysql = require('mysql2');
+require("dotenv").config({ path: ".env.local" });
+require("dotenv").config();
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Neil#1306s',
-  database: 'careconnect',
-});
+const db = require("./config/database");
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Connection error:', err);
-  } else {
-    console.log('Database connected successfully.');
+async function testConnection() {
+  try {
+    await db.ready();
+    const [rows] = await db.query("SELECT 1 AS ok");
+    console.log("Database connected successfully.", rows[0]);
+  } catch (error) {
+    console.error("Connection error:", error.message);
+    process.exitCode = 1;
   }
-});
+}
 
-connection.end();
+testConnection();
