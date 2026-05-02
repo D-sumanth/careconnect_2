@@ -50,6 +50,14 @@ app.get("/form.html", requireRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "public", "form.html"));
 });
 
+app.get("/admin-users.html", requireRole("admin"), (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "admin-users.html"));
+});
+
+app.get("/account.html", requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "account.html"));
+});
+
 app.get("/staff-dashboard", requireRole("employee", "admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "public", "staff-dashboard.html"));
 });

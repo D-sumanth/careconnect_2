@@ -17,6 +17,7 @@
         padding: 10px 14px;
       }
 
+      .session-bar a,
       .session-bar button {
         background: #fff;
         border: 0;
@@ -25,6 +26,7 @@
         cursor: pointer;
         font-weight: 600;
         padding: 7px 10px;
+        text-decoration: none;
       }
 
       body {
@@ -168,7 +170,8 @@
       .plus-icon:hover {
         transform: rotate(90deg) scale(1.1);
       }
-      .dashboard-button {
+      .dashboard-button,
+      .manage-users-button {
         position: fixed;
         bottom: 30px;
         right: 30px;
@@ -182,7 +185,13 @@
         z-index: 1000;
       }
 
-      .dashboard-button:hover {
+      .manage-users-button {
+        bottom: 86px;
+        background: #1976d2;
+      }
+
+      .dashboard-button:hover,
+      .manage-users-button:hover {
         transform: translateY(-3px);
       }
       .update-button {

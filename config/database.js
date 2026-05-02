@@ -96,6 +96,11 @@ async function initializeDatabase() {
   `);
 
   await pool.query(`
+    ALTER TABLE app_users
+    ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+  `);
+
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS audit_log (
       id SERIAL PRIMARY KEY,
       user_id INTEGER REFERENCES app_users(id) ON DELETE SET NULL,

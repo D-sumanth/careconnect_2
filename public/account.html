@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account - CareConnect</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/account.css" />
+  </head>
+  <body>
+    <main class="account-shell">
+      <header class="page-header">
+        <div>
+          <h1 class="logo">
+            <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
+          </h1>
+          <p>Account security</p>
+        </div>
+        <a class="secondary-link" href="/">Home</a>
+      </header>
+
+      <section class="account-card">
+        <div id="account-summary" class="account-summary"></div>
+
+        <form id="change-password-form" class="password-form">
+          <h2>Change Password</h2>
+
+          <label for="current-password">Current password</label>
+          <input
+            id="current-password"
+            name="currentPassword"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
+
+          <label for="new-password">New password</label>
+          <input
+            id="new-password"
+            name="newPassword"
+            type="password"
+            autocomplete="new-password"
+            minlength="10"
+            required
+          />
+
+          <label for="confirm-password">Confirm new password</label>
+          <input
+            id="confirm-password"
+            name="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            minlength="10"
+            required
+          />
+
+          <p id="password-message" class="form-message" role="alert"></p>
+          <button type="submit">Update password</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/account.js"></script>
+  </body>
+</html>

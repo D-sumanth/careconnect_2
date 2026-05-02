@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Users - CareConnect</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/admin-users.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="page-header">
+        <div>
+          <h1 class="logo">
+            <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
+          </h1>
+          <p>User access and staff account management</p>
+        </div>
+        <a class="secondary-link" href="/index.html">Home</a>
+      </header>
+
+      <section class="notice-panel" id="temporary-password-panel" hidden>
+        <strong>Temporary password</strong>
+        <span id="temporary-password-text"></span>
+      </section>
+
+      <section class="management-grid">
+        <form id="create-user-form" class="form-panel">
+          <h2>Create Login</h2>
+
+          <label for="name">Name</label>
+          <input id="name" name="name" autocomplete="name" required />
+
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+
+          <label for="role">Role</label>
+          <select id="role" name="role" required>
+            <option value="employee">Employee</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          <label for="department">Department</label>
+          <select id="department" name="department" required>
+            <option value="" disabled selected>Select department</option>
+            <option value="Medical">Medical</option>
+            <option value="Kitchen">Kitchen</option>
+            <option value="Housekeeping">Housekeeping</option>
+            <option value="Admin">Admin</option>
+            <option value="Reception">Reception</option>
+          </select>
+
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            minlength="10"
+            placeholder="Leave blank to generate"
+          />
+
+          <label class="checkbox-row">
+            <input id="create-staff" name="createStaff" type="checkbox" checked />
+            Create linked staff profile
+          </label>
+
+          <p id="create-user-message" class="form-message" role="alert"></p>
+          <button type="submit">Create user</button>
+        </form>
+
+        <section class="users-panel">
+          <div class="panel-heading">
+            <h2>Current Users</h2>
+            <button id="refresh-users" type="button">Refresh</button>
+          </div>
+          <div id="users-list" class="users-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/js/auth.js"></script>
+    <script>
+      requireCurrentUser(["admin"]);
+    </script>
+    <script src="/js/admin-users.js"></script>
+  </body>
+</html>

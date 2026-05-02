@@ -118,7 +118,7 @@ function requireAuth(req, res, next) {
     return;
   }
 
-  if (req.path.startsWith("/api/")) {
+  if ((req.originalUrl || req.path).startsWith("/api/")) {
     res.status(401).json({ error: "Authentication required" });
     return;
   }
@@ -138,7 +138,7 @@ function requireRole(...roles) {
       return;
     }
 
-    if (req.path.startsWith("/api/")) {
+    if ((req.originalUrl || req.path).startsWith("/api/")) {
       res.status(403).json({ error: "You do not have permission" });
       return;
     }

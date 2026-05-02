@@ -1,0 +1,222 @@
+body {
+  background: #f4f7fb;
+  color: #24364b;
+}
+
+.admin-shell {
+  margin: 0 auto;
+  max-width: 1180px;
+}
+
+.page-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.page-header p {
+  color: #607086;
+  margin-top: 4px;
+}
+
+.secondary-link {
+  background: #ffffff;
+  border: 1px solid #c9d6e6;
+  border-radius: 6px;
+  color: #24364b;
+  font-weight: 600;
+  padding: 10px 14px;
+  text-decoration: none;
+}
+
+.notice-panel {
+  background: #e8f5e9;
+  border: 1px solid #9bd19f;
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 14px;
+}
+
+.notice-panel span {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 1.05rem;
+  word-break: break-word;
+}
+
+.management-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 340px minmax(0, 1fr);
+}
+
+.form-panel,
+.users-panel {
+  background: #ffffff;
+  border: 1px solid #dbe5f2;
+  border-radius: 8px;
+  box-shadow: 0 14px 35px rgba(36, 54, 75, 0.08);
+  padding: 20px;
+}
+
+.form-panel {
+  align-self: start;
+  display: grid;
+  gap: 10px;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+label {
+  font-weight: 600;
+}
+
+input,
+select {
+  border: 1px solid #c9d6e6;
+  border-radius: 6px;
+  color: #24364b;
+  font-size: 1rem;
+  padding: 10px;
+}
+
+input:focus,
+select:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.14);
+  outline: none;
+}
+
+.checkbox-row {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.checkbox-row input {
+  height: 18px;
+  width: 18px;
+}
+
+button {
+  background: #1976d2;
+  border: 0;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 12px;
+}
+
+button:hover {
+  background: #125aa3;
+}
+
+button.secondary {
+  background: #eef3f8;
+  color: #24364b;
+}
+
+button.secondary:hover {
+  background: #dfe9f4;
+}
+
+button.danger {
+  background: #b42318;
+}
+
+button.danger:hover {
+  background: #8f1c13;
+}
+
+.form-message {
+  color: #b42318;
+  min-height: 20px;
+}
+
+.panel-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.users-list {
+  display: grid;
+  gap: 12px;
+}
+
+.user-row {
+  border: 1px solid #dbe5f2;
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 14px;
+}
+
+.user-row.inactive {
+  background: #f7f8fa;
+  color: #6c7888;
+}
+
+.user-details h3 {
+  font-size: 1rem;
+}
+
+.user-meta {
+  color: #607086;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 4px;
+}
+
+.pill {
+  background: #eef3f8;
+  border-radius: 999px;
+  color: #24364b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+.pill.admin {
+  background: #e3f2fd;
+  color: #125aa3;
+}
+
+.pill.inactive {
+  background: #fbe9e7;
+  color: #b42318;
+}
+
+.user-actions {
+  align-content: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 850px) {
+  .management-grid,
+  .user-row {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .user-actions {
+    justify-content: flex-start;
+  }
+}

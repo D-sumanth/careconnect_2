@@ -25,8 +25,24 @@ async function requireCurrentUser(allowedRoles = []) {
 function renderUserBar(user) {
   const bar = document.createElement("div");
   bar.className = "session-bar";
+  const safeName = String(user.name || "").replace(/[&<>"']/g, (character) => {
+    const replacements = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return replacements[character];
+  });
   bar.innerHTML = `
-    <span>${user.name} · ${user.role}</span>
+    <span>${safeName} - ${user.role}</span>
+    <a href="/account.html">Account</a>
+    ${
+      user.role === "admin"
+        ? '<a href="/admin-users.html">Manage users</a>'
+        : ""
+    }
     <button type="button" id="logout-button">Sign out</button>
   `;
   document.body.prepend(bar);
