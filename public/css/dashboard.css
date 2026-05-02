@@ -208,6 +208,26 @@ header {
   color: #666;
 }
 
+.status-pill {
+  background: #eef3f8;
+  border-radius: 999px;
+  color: #24364b;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+.status-pill.complete {
+  background: #e8f5e9;
+  color: #1b6b2a;
+}
+
+.status-pill.pending {
+  background: #fff4e5;
+  color: #9a4c00;
+}
+
 .info-footer {
   display: flex;
   justify-content: space-between;
@@ -411,6 +431,22 @@ header {
   background-color: #fff;
   padding: 5px 0;
   z-index: 1;
+}
+
+.report-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.report-section {
+  margin-top: 16px;
+}
+
+.report-section h4 {
+  color: #2c3e50;
+  margin-bottom: 8px;
 }
 .acknowledgments-wrapper {
   max-height: 200px; /* Height of approximately 3 rows */

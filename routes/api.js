@@ -17,6 +17,37 @@ router.use(async (req, res, next) => {
 
 router.use(requireAuth);
 
+function targetStaffCte() {
+  return `
+    WITH target_staff AS (
+      SELECT DISTINCT s.id, s.name, s.department
+      FROM staff s
+      JOIN app_users u
+        ON u.staff_id = s.id
+       AND u.role = 'employee'
+       AND u.is_active = TRUE
+      JOIN information i ON i.id = ?
+      WHERE i.send_to @> '["All"]'::jsonb
+         OR LOWER(s.department) = LOWER(i.department)
+         OR EXISTS (
+           SELECT 1
+           FROM jsonb_array_elements_text(i.send_to) AS target(value)
+           WHERE LOWER(target.value) = LOWER(s.department)
+         )
+    )
+  `;
+}
+
+async function staffIsTargeted(infoId, staffId) {
+  const [rows] = await db.query(
+    `${targetStaffCte()}
+     SELECT 1 AS ok FROM target_staff WHERE id = ? LIMIT 1`,
+    [infoId, staffId]
+  );
+
+  return Boolean(rows[0]);
+}
+
 // Test database connection
 router.get("/test", async (req, res) => {
   try {
@@ -92,11 +123,11 @@ router.get("/staff", requireRole("admin"), async (req, res) => {
   }
 });
 
-// Get XXXXXXXXXXXXXXX for specific info
+// Get acknowledgments for specific info
 router.get("/acknowledgments/:infoId", async (req, res) => {
   try {
     const [rows] = await db.query(
-      `SELECT a.acknowledged_at, s.name as staff_name
+      `SELECT a.acknowledged_at, s.name AS staff_name, s.department
        FROM tempstaff a
        JOIN staff s ON a.staff_id = s.id
        WHERE a.info_id = ?
@@ -105,31 +136,78 @@ router.get("/acknowledgments/:infoId", async (req, res) => {
     );
     res.json(rows);
   } catch (error) {
-    console.error("Error fetching XXXXXXXXXXXXXXX:", error);
-    res.status(500).json({ error: "Failed to fetch XXXXXXXXXXXXXXX" });
+    console.error("Error fetching acknowledgments:", error);
+    res.status(500).json({ error: "Failed to fetch acknowledgments" });
   }
 });
 
 // Get acknowledgment status
 router.get("/acknowledgment-status/:infoId", async (req, res) => {
   try {
-    const [staffCount] = await db.query("SELECT COUNT(*) as total FROM staff");
-    const [ackCount] = await db.query(
-      "SELECT COUNT(DISTINCT staff_id) as count FROM tempstaff WHERE info_id = ?",
-      [req.params.infoId]
+    const [rows] = await db.query(
+      `${targetStaffCte()}
+       SELECT
+         COUNT(ts.id) AS total,
+         COUNT(a.staff_id) AS acknowledged_count
+       FROM target_staff ts
+       LEFT JOIN tempstaff a
+         ON a.staff_id = ts.id
+        AND a.info_id = ?`,
+      [req.params.infoId, req.params.infoId]
     );
 
+    const total = Number(rows[0]?.total || 0);
+    const acknowledgedCount = Number(rows[0]?.acknowledged_count || 0);
+
     res.json({
-      isFullyAcknowledged:
-        Number(ackCount[0].count) === Number(staffCount[0].total),
-      totalStaff: Number(staffCount[0].total),
-      acknowledgedCount: Number(ackCount[0].count),
+      isFullyAcknowledged: total > 0 && acknowledgedCount === total,
+      totalStaff: total,
+      acknowledgedCount,
+      pendingCount: Math.max(total - acknowledgedCount, 0),
     });
   } catch (error) {
     console.error("Error checking acknowledgment status:", error);
     res.status(500).json({ error: "Failed to check acknowledgment status" });
   }
 });
+
+// Get acknowledgment report with pending staff
+router.get(
+  "/acknowledgment-report/:infoId",
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const [rows] = await db.query(
+        `${targetStaffCte()}
+         SELECT
+           ts.id AS staff_id,
+           ts.name AS staff_name,
+           ts.department,
+           a.acknowledged_at
+         FROM target_staff ts
+         LEFT JOIN tempstaff a
+           ON a.staff_id = ts.id
+          AND a.info_id = ?
+         ORDER BY a.acknowledged_at IS NULL DESC, ts.department, ts.name`,
+        [req.params.infoId, req.params.infoId]
+      );
+
+      const acknowledged = rows.filter((row) => row.acknowledged_at);
+      const pending = rows.filter((row) => !row.acknowledged_at);
+
+      res.json({
+        totalStaff: rows.length,
+        acknowledgedCount: acknowledged.length,
+        pendingCount: pending.length,
+        acknowledged,
+        pending,
+      });
+    } catch (error) {
+      console.error("Error loading acknowledgment report:", error);
+      res.status(500).json({ error: "Failed to load acknowledgment report" });
+    }
+  }
+);
 
 // Acknowledge info
 router.post("/acknowledge", requireRole("employee", "admin"), async (req, res) => {
@@ -142,6 +220,14 @@ router.post("/acknowledge", requireRole("employee", "admin"), async (req, res) =
   }
 
   try {
+    const isTargeted = await staffIsTargeted(infoId, staffId);
+    if (!isTargeted) {
+      res.status(403).json({
+        error: "This staff member is not assigned to acknowledge this notice",
+      });
+      return;
+    }
+
     await db.query(
       `INSERT INTO tempstaff (info_id, staff_id, acknowledged_at)
        VALUES (?, ?, NOW())
@@ -214,20 +300,78 @@ router.post("/add-staff", requireRole("admin"), async (req, res) => {
   }
 });
 
+// Get recent audit activity
+router.get("/audit-log", requireRole("admin"), async (req, res) => {
+  const limit = Math.min(Number(req.query.limit || 100), 250);
+
+  try {
+    const [rows] = await db.query(
+      `SELECT a.id, a.action, a.entity_type, a.entity_id, a.metadata, a.created_at,
+              u.name AS user_name, u.email AS user_email, u.role AS user_role
+       FROM audit_log a
+       LEFT JOIN app_users u ON u.id = a.user_id
+       ORDER BY a.created_at DESC
+       LIMIT ?`,
+      [limit]
+    );
+
+    res.json({ events: rows });
+  } catch (error) {
+    console.error("Error fetching audit log:", error);
+    res.status(500).json({ error: "Failed to fetch audit log" });
+  }
+});
+
 // Get all forms
 router.get("/forms", async (req, res) => {
   try {
     const [rows] =
       req.user.role === "admin"
-        ? await db.query("SELECT * FROM information ORDER BY created_at DESC")
+        ? await db.query(
+            `SELECT i.*,
+                    COALESCE(status.total_staff, 0) AS total_staff,
+                    COALESCE(status.acknowledged_count, 0) AS acknowledged_count
+             FROM information i
+             LEFT JOIN LATERAL (
+               SELECT
+                 COUNT(ts.id) AS total_staff,
+                 COUNT(a.staff_id) AS acknowledged_count
+               FROM (
+                 SELECT DISTINCT s.id
+                 FROM staff s
+                 JOIN app_users u
+                   ON u.staff_id = s.id
+                  AND u.role = 'employee'
+                  AND u.is_active = TRUE
+                 WHERE i.send_to @> '["All"]'::jsonb
+                    OR LOWER(s.department) = LOWER(i.department)
+                    OR EXISTS (
+                      SELECT 1
+                      FROM jsonb_array_elements_text(i.send_to) AS target(value)
+                      WHERE LOWER(target.value) = LOWER(s.department)
+                    )
+               ) ts
+               LEFT JOIN tempstaff a
+                 ON a.staff_id = ts.id
+                AND a.info_id = i.id
+             ) status ON TRUE
+             ORDER BY i.created_at DESC`
+          )
         : await db.query(
-            `SELECT *
-             FROM information
-             WHERE send_to @> ?::jsonb
-                OR send_to @> ?::jsonb
-                OR LOWER(department) = LOWER(?)
-             ORDER BY created_at DESC`,
+            `SELECT i.*,
+                    EXISTS (
+                      SELECT 1
+                      FROM tempstaff a
+                      WHERE a.info_id = i.id
+                        AND a.staff_id = ?
+                    ) AS acknowledged_by_current_user
+             FROM information i
+             WHERE i.send_to @> ?::jsonb
+                OR i.send_to @> ?::jsonb
+                OR LOWER(i.department) = LOWER(?)
+             ORDER BY i.created_at DESC`,
             [
+              req.user.staffId || 0,
               JSON.stringify(["All"]),
               JSON.stringify([req.user.department || ""]),
               req.user.department || "",

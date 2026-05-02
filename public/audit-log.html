@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audit Log - CareConnect</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/audit-log.css" />
+  </head>
+  <body>
+    <main class="audit-shell">
+      <header class="page-header">
+        <div>
+          <h1 class="logo">
+            <span class="blue-c">C</span>are<span class="blue-c">C</span>onnect
+          </h1>
+          <p>Security and acknowledgement activity</p>
+        </div>
+        <a class="secondary-link" href="/index.html">Home</a>
+      </header>
+
+      <section class="audit-panel">
+        <div class="panel-heading">
+          <h2>Recent Events</h2>
+          <button id="refresh-audit" type="button">Refresh</button>
+        </div>
+        <div id="audit-list" class="audit-list"></div>
+      </section>
+    </main>
+
+    <script src="/js/auth.js"></script>
+    <script>
+      requireCurrentUser(["admin"]);
+    </script>
+    <script src="/js/audit-log.js"></script>
+  </body>
+</html>

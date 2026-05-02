@@ -40,7 +40,7 @@ function renderUserBar(user) {
     <a href="/account.html">Account</a>
     ${
       user.role === "admin"
-        ? '<a href="/admin-users.html">Manage users</a>'
+        ? '<a href="/admin-users.html">Manage users</a><a href="/audit-log.html">Audit log</a>'
         : ""
     }
     <button type="button" id="logout-button">Sign out</button>

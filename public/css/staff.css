@@ -208,6 +208,26 @@ header {
   color: #666;
 }
 
+.status-pill {
+  background: #eef3f8;
+  border-radius: 999px;
+  color: #24364b;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+.status-pill.complete {
+  background: #e8f5e9;
+  color: #1b6b2a;
+}
+
+.status-pill.pending {
+  background: #fff4e5;
+  color: #9a4c00;
+}
+
 .info-footer {
   display: flex;
   justify-content: space-between;
